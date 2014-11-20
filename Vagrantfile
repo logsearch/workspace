@@ -10,7 +10,7 @@ fi
 
 # Build containers from Dockerfiles
 docker build -t bosh-cli /workspace/shared/runtime-environments/bosh-cli
-docker build -t kibana shared/runtime-environments/kibana/
+docker build -t kibana /workspace/shared/runtime-environments/kibana/
 
 # Run and link the containers
 #docker run -d --name bosh-cli -e POSTGRESQL_USER=docker -e POSTGRESQL_PASS=docker postgres:latest
@@ -43,7 +43,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder ".", "/workspace"
 
   # Uncomment below to use more than one instance at once
-  # config.vm.network :forwarded_port, guest: 2375, host: 2375, auto_correct: true
+  config.vm.network :forwarded_port, guest: 8000, host: 8000
 
   # Fix busybox/udhcpc issue
   config.vm.provision :shell do |s|

@@ -1,0 +1,6 @@
+[submodule "src/kibana"]
+	path = src/kibana
+	url = https://github.com/elasticsearch/kibana.git
+[submodule "src/kibana-status-diagram-plugin"]
+	path = src/kibana-status-diagram-plugin
+	url = https://mrdavidlaing@github.com/logsearch/kibana-status-diagram-plugin.git

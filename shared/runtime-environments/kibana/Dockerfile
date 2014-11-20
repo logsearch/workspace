@@ -1,1 +1,1 @@
-FROM logsearch:runtime-environment-kibana
+FROM logsearch/runtime-environment-kibana

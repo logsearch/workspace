@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-docker run -i -t -v $PWD:/workspace kibana bash
+docker run -i -t -v /workspace:/workspace -p 8000:8000 kibana bash
