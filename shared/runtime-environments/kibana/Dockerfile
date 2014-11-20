@@ -1,1 +1,1 @@
-FROM dockerfile:nodejs
+FROM logsearch:runtime-environment-kibana
