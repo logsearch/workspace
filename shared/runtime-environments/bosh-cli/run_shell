@@ -1,0 +1,2 @@
+#!/bin/bash
+docker run -i -t -v /workspace:/workspace --rm bosh-cli bash
