@@ -10,6 +10,7 @@ fi
 
 # Build containers from Dockerfiles
 docker build -t bosh-cli /workspace/shared/runtime-environments/bosh-cli
+docker build -t kibana shared/runtime-environments/kibana/
 
 # Run and link the containers
 #docker run -d --name bosh-cli -e POSTGRESQL_USER=docker -e POSTGRESQL_PASS=docker postgres:latest
