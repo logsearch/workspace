@@ -1,0 +1,13 @@
+#!/bin/bash
+
+npm install
+
+CI=true bower install --allow-root
+
+( cd src/server && bundle --path=/root/.gem/ruby/1.9.1 )
+
+# symlink our VM cache into the container gem path
+ln -s /root/.gem/ruby/1.9.1/ruby/1.9.1/gems/* /var/lib/gems/1.9.1/gems/
+ln -s /root/.gem/ruby/1.9.1/ruby/1.9.1/specifications/* /var/lib/gems/1.9.1/specifications/
+
+exec grunt dev
