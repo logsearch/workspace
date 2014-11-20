@@ -138,7 +138,7 @@ prompt() {
     exit_status="${RED}▸${COLOREND} "
   fi
 
-  PS1="[logsearch-operations] $(working_directory)$(parse_git_branch)$(parse_remote_state)$exit_status"
+  PS1="[bosh-cli] $(working_directory)$(parse_git_branch)$(parse_remote_state)$exit_status"
 }
 
 PROMPT_COMMAND=prompt
