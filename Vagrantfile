@@ -11,17 +11,18 @@ fi
 # Build containers from Dockerfiles
 docker build -t bosh-cli /workspace/shared/runtime-environments/bosh-cli
 docker build -t kibana /workspace/shared/runtime-environments/kibana/
+docker build -t docs-webserver /workspace/shared/runtime-environments/docs/
 
 # Run and link the containers
 #docker run -d --name bosh-cli -e POSTGRESQL_USER=docker -e POSTGRESQL_PASS=docker postgres:latest
+docker run -d --name docs-webserver -p 8080:80 -v /workspace/docs:/var/www/html docs-webserver
 
 SCRIPT
 
 # Commands required to ensure correct docker containers
 # are started when the vm is rebooted.
 $start = <<SCRIPT
-#docker start bosh-cli
-
+docker start docs-webserver
 SCRIPT
 
 VAGRANTFILE_API_VERSION = "2"
@@ -44,6 +45,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Uncomment below to use more than one instance at once
   config.vm.network :forwarded_port, guest: 8000, host: 8000
+  config.vm.network :forwarded_port, guest: 8080, host: 8080
 
   # Fix busybox/udhcpc issue
   config.vm.provision :shell do |s|
