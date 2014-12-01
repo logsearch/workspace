@@ -1,4 +1,4 @@
-# LogSearch WorkSpace Documentation
+# LogSearch Documentation
 
 Documentation for the LogSearch project is split by user role:
 
