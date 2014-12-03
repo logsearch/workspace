@@ -3,7 +3,7 @@ env = ENV.to_hash
 
 # Commands required to setup working docker environment, link containers etc.
 $setup = <<SCRIPT
-apt-get install apparmor-utils
+apt-get install apparmor-utils -y
 aa-complain /etc/apparmor.d/docker # prevent error: set apparmor profile docker-default: no such file or directory
 
 # Stop and remove any existing containers
