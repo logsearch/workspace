@@ -1,2 +1,0 @@
-#!/bin/bash
-vagrant ssh -c "sh /workspace/shared/runtime-environments/bosh-cli/run_shell"

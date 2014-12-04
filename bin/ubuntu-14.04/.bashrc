@@ -138,10 +138,16 @@ prompt() {
     exit_status="${RED}▸${COLOREND} "
   fi
 
-  PS1="[bosh-cli] $(working_directory)$(parse_git_branch)$(parse_remote_state)$exit_status"
+  PS1="[logsearch workspace] $(working_directory)$(parse_git_branch)$(parse_remote_state)$exit_status"
 }
 
 PROMPT_COMMAND=prompt
 
 #Configure environment variables
-source /workspace/.env
+source /vagrant/.env
+
+#Turn on the credential helper so that Git will save your credentials in memory 1 hour.
+git config --global credential.helper 'cache --timeout=3600'
+
+#Default to the /workspace folder
+cd /workspace

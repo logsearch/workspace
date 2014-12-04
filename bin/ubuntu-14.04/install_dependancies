@@ -1,0 +1,115 @@
+#!/bin/bash
+#set -x
+set -e
+
+if [ "`tail -1 /root/.profile`" = "mesg n" ]; then
+  echo 'Patching basebox to prevent future `stdin: is not a tty` errors...'
+  sed -i '$d' /root/.profile
+  cat << 'EOH' >> /root/.profile
+  if `tty -s`; then
+    mesg n
+  fi
+EOH
+fi
+
+#
+# system: curl
+#
+
+if [ ! -f /usr/bin/curl ]; then
+  echo "Installing curl"
+  sudo apt-get install curl -y
+fi
+echo "curl: $(curl --version)" | head -n 1
+
+#
+# system: git
+#
+if [ ! -f /usr/bin/git ]; then
+  echo "Installing git"
+  sudo apt-get install git-core -y
+fi
+echo "git: $(git --version)"
+
+#
+# system: java
+#
+if ! (which java 1>/dev/null 2>&1) ; then
+  echo "Installing java..."
+
+  sudo apt-get install -y openjdk-7-jre-headless
+fi
+echo "java: $(java -version 2>&1 | awk -F '\\"' '/version/ { print $2 }')"
+
+#
+# system: node & npm
+#
+if ! (which nodejs 1>/dev/null 2>&1) ; then
+  echo "Installing NodeJs & NPM ..."
+
+  sudo apt-get install -y nodejs npm
+  sudo ln -s /usr/bin/nodejs /usr/bin/node
+fi
+echo "nodejs: $(nodejs -v)" | head -n 1
+
+
+#
+# system: nginx
+#
+if ! (which nginx 1>/dev/null 2>&1) ; then
+  echo "Installing nginx..."
+
+  sudo apt-get install -y nginx
+fi
+echo "nginx: $(nginx -v 2>&1 | awk -F '/' '/nginx/ { print $2 }')"
+
+#
+# util: vim
+#
+if ! (which vim 1>/dev/null 2>&1) ; then
+  echo "Installing vim..."
+
+  sudo apt-get install -y vim
+fi
+echo "vim: $(vim --version)" | head -n 1
+
+#
+# util: tig
+#
+if ! (which tig 1>/dev/null 2>&1) ; then
+  echo "Installing tig..."
+
+  sudo apt-get install -y tig
+fi
+echo "tig: $(tig --version)" | head -n 1
+
+
+#
+# util: floomatic
+#
+if ! (which floomatic 1>/dev/null 2>&1) ; then
+  echo "Installing floomatic..."
+
+  sudo apt-get install -y libqt4-dev
+  sudo npm install -g floomatic
+fi
+echo "floomatic: $(floomatic --version)" | head -n 1
+
+
+#
+# system: configure BASH
+#
+cp /vagrant/_setup/ubuntu/.bashrc /home/vagrant/.bashrc
+
+#
+# system: Setup workspace folder
+#
+mkdir -p /workspace/bin
+mkdir -p /workspace/environments
+mkdir -p /workspace/src
+chown -R vagrant:vagrant /workspace
+echo "workspace folder: /workspace"
+
+echo "=-=-=-=-=-=-=-=-=-=-=-="
+echo "Provisioning completed!"
+echo "=-=-=-=-=-=-=-=-=-=-=-="

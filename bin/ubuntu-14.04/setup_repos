@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+echo "Fetching logsearch documentation"
+git clone https://github.com/logsearch/docs.git src/docs
+
+echo "Fetching logsearch-filters-internal"
+git clone --recursive https://github.com/cityindex/logsearch-filters-internal.git src/logsearch-filters-internal
+cd src/logsearch-filters-internal
+./bin/install_deps.sh 
+
+echo "Fetching labs-operations"
+git clone --recursive https://github.com/cityindex/labs-operations.git environments/labs-operations

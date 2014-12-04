@@ -1,9 +1,0 @@
-#!/usr/bin/env sh
-
-docker run -i -t \
-    -v /workspace:/workspace \
-    -v /workspace/src/kibana-status-diagram-plugin:/workspace/src/kibana/src/kibana/plugins/logsearch-status \
-    -v /tmp/kibana-node_modules:/workspace/src/kibana/node_modules \
-    -v /tmp/kibana-ruby_gems:/root/.gem/ruby/1.9.1 \
-    -p 8000:8000 \
-    kibana bash
