@@ -4,6 +4,6 @@ source $SCRIPT_DIR/../.env
 
 echo "Pulling down all EDITABLE files from the remote workspace into $SCRIPT_DIR/../remote_workspace_mirror/"
 
-rsync -avz --delete -e "ssh -i $REMOTE_WORKSPACE_SSH_PRIVATE_KEY" \
+rsync -avz --delete --no-links -e "ssh -i $REMOTE_WORKSPACE_SSH_PRIVATE_KEY" \
 --exclude="/bin/" --exclude=".*/" --exclude=".*" --filter=":- .gitignore" \
 $REMOTE_WORKSPACE_USER@$REMOTE_WORKSPACE_HOST:~/ $SCRIPT_DIR/../remote_workspace_mirror/

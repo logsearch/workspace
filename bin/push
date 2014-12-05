@@ -2,7 +2,7 @@
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPT_DIR/../.env
 
-echo "Pushing all changes every second from $SCRIPT_DIR/../remote_workspace_mirror/ to the remote workspace"
+echo "Pushing changes from $SCRIPT_DIR/../remote_workspace_mirror/ to the remote workspace"
 echo "NB!  This does not push deletions"
 
 rsync -avz --max-delete=-1 -e "ssh -i $REMOTE_WORKSPACE_SSH_PRIVATE_KEY" \
