@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source $SCRIPT_DIR/../.env
+
+echo "Pushing all changes every second from $SCRIPT_DIR/../remote_workspace_mirror/ to the remote workspace"
+echo "NB!  This does not push deletions"
+
+rsync -avz --max-delete=-1 -e "ssh -i $REMOTE_WORKSPACE_SSH_PRIVATE_KEY" \
+$SCRIPT_DIR/../remote_workspace_mirror/ $REMOTE_WORKSPACE_USER@$REMOTE_WORKSPACE_HOST:~/ 
+
+#TODO: investigate only triggering rsync on file change using https://github.com/axkibe/lsyncd"

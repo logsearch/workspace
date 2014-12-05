@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+echo "Checking for required dependancies"
+echo "##################################"
+
+#
+# system: curl
+#
+if ! (which rsync 1>/dev/null 2>&1) ; then
+  echo "ERROR:  rsync is required"
+  exit 1
+fi
+echo "rsync: $(rsync --version)" | head -n 1
+
+#
+# system: ssh
+#
+if ! (which ssh 1>/dev/null 2>&1) ; then
+  echo "ERROR:  ssh is required"
+  exit 1
+fi
+echo "ssh: $(ssh -v 2>&1)" | head -n 1
+
+#
+# config: .env
+#
+if [ ! -f $SCRIPT_DIR/../.env ]; then
+  echo "ERROR: $SCRIPT_DIR/../.env doesn't exist.  Ensure you have created one from .env-sample"
+  exit 1
+fi
+echo ".env: exists"
+
+echo ""
+echo "##################################"
+echo "SUCCESS!  all requirements met"
+echo "##################################"

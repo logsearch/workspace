@@ -36,3 +36,4 @@ build/
 .vagrant/
 .env
 !.env-sample
+remote_workspace_mirror/

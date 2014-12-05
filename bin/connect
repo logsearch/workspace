@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source $SCRIPT_DIR/../.env
+
+echo "Pushing .env up to remote workspace ..."
+rsync -e "ssh -i $REMOTE_WORKSPACE_SSH_PRIVATE_KEY" $SCRIPT_DIR/../.env $REMOTE_WORKSPACE_USER@$REMOTE_WORKSPACE_HOST:~/
+
+echo "Connecting ..."
+ssh -i $REMOTE_WORKSPACE_SSH_PRIVATE_KEY $REMOTE_WORKSPACE_USER@$REMOTE_WORKSPACE_HOST

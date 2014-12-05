@@ -7,14 +7,11 @@ Vagrant.require_version ">= 1.6.5"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.hostname = 'logsearch-workspace'
-
   #Ubuntu 14.04 VM with BOSH lite installed
   config.vm.box = 'cloudfoundry/bosh-lite'
   config.vm.box_version = '388'
 
-  config.vm.provision "shell", path: "_setup/ubuntu/install_dependancies"
-  config.vm.provision :file, source: '~/.gitconfig', destination: '/home/vagrant/.gitconfig' if File.exist?(ENV['HOME'] + '/.gitconfig')
+  config.vm.provision "shell", path: "./install_dependancies"
 
   config.vm.provider :virtualbox do |v, override|
     override.vm.synced_folder ".", "/vagrant"

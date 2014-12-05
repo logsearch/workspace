@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+WORKSPACE_USERNAME=${WORKSPACE_USERNAME:?"env WORKSPACE_USERNAME must be defined"}
+WORKSPACE_PUBLIC_KEY=${WORKSPACE_PUBLIC_KEY:?"env WORKSPACE_PUBLIC_KEY must be defined"}
+
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
+adduser --disabled-password --gecos "" $WORKSPACE_USERNAME
+rsync -rtv $SCRIPT_DIR/workspace_skel/ /home/$WORKSPACE_USERNAME/
+
+echo $WORKSPACE_PUBLIC_KEY >> /home/$WORKSPACE_USERNAME/.ssh/authorized_keys
+
+chown -R $WORKSPACE_USERNAME:$WORKSPACE_USERNAME /home/$WORKSPACE_USERNAME

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+LOGSEARCH_WORKSPACE_AMI=ami-4c4cfe3b
+LOGSEARCH_WORKSPACE_AWS_SECURITY_GROUP_ID=sg-2dcf1b48  #meta-logsearch-io-VPC-40F9XUFXHOY2-SecuritygroupInternalAll-1C80BXBZOZTHC
+LOGSEARCH_WORKSPACE_SUBNET_ID=subnet-2aba724f # meta/eu-west-1a/private
+LOGSEARCH_WORKSPACE_KEYPAIR=labs-commander-2014-05-02
+LOGSEARCH_WORKSPACE_PRIVATE_KEY=~/.ssh/labs-commander-2014-05-02.pem 
+
+echo "TODO:  Launch an EC2 instance..."
