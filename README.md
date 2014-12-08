@@ -20,6 +20,7 @@ _We recommend that you have one member of your team set up a remote server in EC
 * SSH in and become `root`
 ```
 sudo -i
+apt-get update && apt-get install git -y
 git clone https://github.com/logsearch/workspace /root/logsearch-workspace
 cd /root/logsearch-workspace
 _setup_remote/install_dependancies

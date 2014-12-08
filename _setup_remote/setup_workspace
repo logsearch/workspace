@@ -3,6 +3,8 @@ SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 WORKSPACE_USERNAME=${WORKSPACE_USERNAME:?"env WORKSPACE_USERNAME must be defined"}
 WORKSPACE_PUBLIC_KEY=${WORKSPACE_PUBLIC_KEY:?"env WORKSPACE_PUBLIC_KEY must be defined"}
+WORKSPACE_USER_EMAIL=${WORKSPACE_USER_EMAIL:?"env WORKSPACE_USER_EMAIL must be defined"}
+WORKSPACE_USER_FULLNAME=${WORKSPACE_USER_FULLNAME:?"env WORKSPACE_USER_FULLNAME must be defined"}
 
 if [ "$(id -u)" != "0" ]; then
    echo "This script must be run as root" 1>&2
@@ -14,4 +16,9 @@ rsync -rtv $SCRIPT_DIR/workspace_skel/ /home/$WORKSPACE_USERNAME/
 
 echo $WORKSPACE_PUBLIC_KEY >> /home/$WORKSPACE_USERNAME/.ssh/authorized_keys
 
+#sed -i '/include \/etc\/nginx\/sites-enabled\/\*\;/a include \/home\/$WORKSPACE_USERNAME\/etc\/nginx\/sites-enabled\/\*\;' /etc/nginx/nginx.conf
+
 chown -R $WORKSPACE_USERNAME:$WORKSPACE_USERNAME /home/$WORKSPACE_USERNAME
+
+
+
