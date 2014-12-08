@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
 echo "Fetching labs-operations"
 echo "################################"
-git clone --recursive https://github.com/cityindex/labs-operations.git 
+git clone --recursive https://github.com/cityindex/labs-operations.git ~/environments/labs-operations
 cd ~/environments/labs-operations
 find . -name .bosh_config.default | sed -e "p;s/.default//" | xargs -n2 cp
 
 echo "Fetching logsearch documentation"
 echo "################################"
 git clone https://github.com/logsearch/docs.git ~/src/docs
+
+echo "Fetching logsearch-website"
+echo "################################"
+git clone https://github.com/logsearch/logsearch-website.git ~/src/logsearch-website
+cd ~/src/logsearch-filters-internal
+_build/install_dependancies.sh
 
 echo "Fetching logsearch-filters-internal"
 echo "################################"
@@ -19,3 +25,6 @@ echo "Fetching kibana4"
 echo "################################"
 git clone --recursive https://github.com/elasticsearch/kibana.git ~/src/kibana
 git clone --recursive https://mrdavidlaing@github.com/logsearch/kibana-status-diagram-plugin.git ~/src/kibana-status-diagram-plugin
+
+
+
