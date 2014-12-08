@@ -57,6 +57,25 @@ if ! (which nodejs 1>/dev/null 2>&1) ; then
 fi
 echo "nodejs: $(nodejs -v)" | head -n 1
 
+#
+# system: grunt-cli
+#
+if ! (which grunt 1>/dev/null 2>&1) ; then
+  echo "Installing Grunt cli ..."
+
+  sudo npm install -g grunt-cli
+fi
+echo "grunt: $(grunt --version)" | head -n 1
+
+#
+# system: bower
+#
+if ! (which bower 1>/dev/null 2>&1) ; then
+  echo "Installing Grunt cli ..."
+
+  sudo npm install -g bower
+fi
+echo "bower: $( bower --version)" | head -n 1
 
 #
 # system: nginx
@@ -121,6 +140,8 @@ if ! (which aws 1>/dev/null 2>&1) ; then
   sudo bash -c "complete -C '/usr/local/bin/aws_completer' aws"
 fi
 echo "awscli: $(aws --version)" | head -n 1
+
+
 
 # Ensure all users have access to /tmp
 sudo chmod 777 /tmp
