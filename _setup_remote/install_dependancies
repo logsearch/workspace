@@ -84,6 +84,8 @@ if ! (which nginx 1>/dev/null 2>&1) ; then
   echo "Installing nginx..."
 
   sudo apt-get install -y nginx
+  sudo sed -i '/#server_names_hash_bucket_size 64/server_names_hash_bucket_size 1024/g' /etc/nginx/nginx.conf;
+  sudo service nginx reload
 fi
 echo "nginx: $(nginx -v 2>&1 | awk -F '/' '/nginx/ { print $2 }')"
 
