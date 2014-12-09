@@ -1,4 +1,6 @@
 #!/bin/bash
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
 #set -x
 set -e
 
@@ -7,11 +9,18 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
-fi
+#
+# system: docker
+#
+if ! (which docker 1>/dev/null 2>&1) ; then
+  echo "Installing docker..."
 
+  wget -qO- https://get.docker.com/ubuntu/ | sh
+fi
+echo "docker: $(docker --version 2>&1)" | head -n 1
+
+
+#Fix
 if [ "`tail -1 /root/.profile`" = "mesg n" ]; then
   echo 'Patching basebox to prevent future `stdin: is not a tty` errors...'
   sed -i '$d' /root/.profile
@@ -83,18 +92,6 @@ fi
 echo "bower: $( bower --version)" | head -n 1
 
 #
-# system: nginx
-#
-if ! (which nginx 1>/dev/null 2>&1) ; then
-  echo "Installing nginx..."
-
-  apt-get install -y nginx
-  sed -i '/#server_names_hash_bucket_size 64/server_names_hash_bucket_size 1024/g' /etc/nginx/nginx.conf;
-  service nginx reload
-fi
-echo "nginx: $(nginx -v 2>&1 | awk -F '/' '/nginx/ { print $2 }')"
-
-#
 # util: vim
 #
 if ! (which vim 1>/dev/null 2>&1) ; then
@@ -137,6 +134,16 @@ fi
 echo "jq: $(jq --version 2>&1)" | head -n 1
 
 #
+# util: tree
+#
+if ! (which tree 1>/dev/null 2>&1) ; then
+  echo "Installing tree..."
+
+  apt-get install tree -y
+fi
+echo "tree: $(tree --version 2>&1)" | head -n 1
+
+#
 # system: awscli
 #
 if ! (which aws 1>/dev/null 2>&1) ; then
@@ -151,6 +158,9 @@ echo "python: $(python --version 2>&1)" | head -n 1
 
 # Ensure all users have access to /tmp
 chmod 777 /tmp
+
+# Display "help" at login
+cp $SCRIPT_DIR/motd /etc/motd
 
 echo "=-=-=-=-=-=-=-=-=-=-=-="
 echo "Provisioning completed!"

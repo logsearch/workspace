@@ -7,18 +7,18 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 WORKSPACE_USERNAME=${WORKSPACE_USERNAME:?"env WORKSPACE_USERNAME must be defined"}
-WORKSPACE_PUBLIC_KEY=${WORKSPACE_PUBLIC_KEY:?"env WORKSPACE_PUBLIC_KEY must be defined"}
-WORKSPACE_USER_EMAIL=${WORKSPACE_USER_EMAIL:?"env WORKSPACE_USER_EMAIL must be defined"}
-WORKSPACE_USER_FULLNAME=${WORKSPACE_USER_FULLNAME:?"env WORKSPACE_USER_FULLNAME must be defined"}
+WORKSPACE_PUBLIC_KEY=${WORKSPACE_PUBLIC_KEY?"env WORKSPACE_PUBLIC_KEY must be defined"}
 
-adduser --disabled-password --gecos "" $WORKSPACE_USERNAME
+if [ ! id -u $WORKSPACE_USERNAME 2>&1 ]; then
+	adduser --disabled-password --gecos "" $WORKSPACE_USERNAME
+fi
 rsync -rtv $SCRIPT_DIR/workspace_skel/ /home/$WORKSPACE_USERNAME/
 
 echo $WORKSPACE_PUBLIC_KEY >> /home/$WORKSPACE_USERNAME/.ssh/authorized_keys
 
-#sed -i '/include \/etc\/nginx\/sites-enabled\/\*\;/a include \/home\/$WORKSPACE_USERNAME\/etc\/nginx\/sites-enabled\/\*\;' /etc/nginx/nginx.conf
+if [ ! -f /home/$WORKSPACE_USERNAME/.env ]; then
+    cp /home/$WORKSPACE_USERNAME/.env-sample /home/$WORKSPACE_USERNAME/.env
+fi
 
 chown -R $WORKSPACE_USERNAME:$WORKSPACE_USERNAME /home/$WORKSPACE_USERNAME
-
-
 

@@ -138,15 +138,23 @@ prompt() {
     exit_status="${RED}▸${COLOREND} "
   fi
 
-  PS1="[logsearch REMOTE] $(working_directory)$(parse_git_branch)$(parse_remote_state)$exit_status"
+  PS1="[logsearch workspace] $(working_directory)$(parse_git_branch)$(parse_remote_state)$exit_status"
 }
 
 PROMPT_COMMAND=prompt
 
 #Configure environment variables
+export BOSH_CONFIG=.bosh_config
 source ~/.env
+
+#Validate that the required values are set
+: ${AWS_ACCESS_KEY_ID:?"Need to set environment var: AWS_ACCESS_KEY_ID"}
+: ${AWS_SECRET_ACCESS_KEY:?"Need to set environment var: AWS_SECRET_ACCESS_KEY"}
+: ${GIT_EMAIL:?"Need to set environment var: GIT_EMAIL"}
+: ${GIT_NAME:?"Need to set environment var: GIT_NAME"}
 
 #Turn on the credential helper so that Git will save your credentials in memory 1 hour.
 git config --global credential.helper 'cache --timeout=3600'
 git config --global user.email '$GIT_EMAIL'
 git config --global user.name '$GIT_NAME'
+
