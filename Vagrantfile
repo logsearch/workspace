@@ -19,6 +19,7 @@ export GIT_EMAIL='#{`git config --global user.email`.chomp}'
 export GIT_NAME='#{`git config --global user.name`.chomp}'" > /home/vagrant/.env
 EOF
   config.vm.provision "shell", inline: <<EOF 
+WORKSPACE_HOMEDIRS=/home \
 WORKSPACE_USERNAME=vagrant \
 WORKSPACE_PUBLIC_KEY='' \
 /vagrant/_setup/runtime/add_new_workspace
