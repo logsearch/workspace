@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-source $SCRIPT_DIR/../.env
-
-echo "Pushing local changes ..."
-rsync -avz --max-delete=-1 -e "ssh -i $REMOTE_WORKSPACE_SSH_PRIVATE_KEY" \
-	$SCRIPT_DIR/../remote_workspace_mirror/ $REMOTE_WORKSPACE_USER@$REMOTE_WORKSPACE_HOST:~/
-echo "Running $@"
-ssh -i $REMOTE_WORKSPACE_SSH_PRIVATE_KEY $REMOTE_WORKSPACE_USER@$REMOTE_WORKSPACE_HOST -- "$@"
