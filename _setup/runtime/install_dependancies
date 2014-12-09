@@ -129,7 +129,7 @@ if ! (which jq 1>/dev/null 2>&1) ; then
 
   sudo apt-get install jq -y
 fi
-echo "jq: $(jq --version)" | head -n 1
+echo "jq: $(jq --version 2>&1)" | head -n 1
 
 #
 # system: awscli
@@ -141,7 +141,7 @@ if ! (which aws 1>/dev/null 2>&1) ; then
   sudo pip install --upgrade awscli httpie
   sudo bash -c "complete -C '/usr/local/bin/aws_completer' aws"
 fi
-echo "awscli: $(aws --version)" | head -n 1
+echo "awscli: $(aws --version 2>&1)" | head -n 1
 
 
 
