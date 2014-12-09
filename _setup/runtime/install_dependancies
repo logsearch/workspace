@@ -7,6 +7,11 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
 if [ "`tail -1 /root/.profile`" = "mesg n" ]; then
   echo 'Patching basebox to prevent future `stdin: is not a tty` errors...'
   sed -i '$d' /root/.profile
@@ -23,7 +28,7 @@ fi
 
 if [ ! -f /usr/bin/curl ]; then
   echo "Installing curl"
-  sudo apt-get install curl -y
+  apt-get install curl -y
 fi
 echo "curl: $(curl --version)" | head -n 1
 
@@ -32,7 +37,7 @@ echo "curl: $(curl --version)" | head -n 1
 #
 if [ ! -f /usr/bin/git ]; then
   echo "Installing git"
-  sudo apt-get install git-core -y
+  apt-get install git-core -y
 fi
 echo "git: $(git --version)"
 
@@ -42,7 +47,7 @@ echo "git: $(git --version)"
 if ! (which java 1>/dev/null 2>&1) ; then
   echo "Installing java..."
 
-  sudo apt-get install -y openjdk-7-jre-headless
+  apt-get install -y openjdk-7-jre-headless
 fi
 echo "java: $(java -version 2>&1 | awk -F '\\"' '/version/ { print $2 }')"
 
@@ -52,8 +57,8 @@ echo "java: $(java -version 2>&1 | awk -F '\\"' '/version/ { print $2 }')"
 if ! (which nodejs 1>/dev/null 2>&1) ; then
   echo "Installing NodeJs & NPM ..."
 
-  sudo apt-get install -y nodejs npm
-  sudo ln -s /usr/bin/nodejs /usr/bin/node
+  apt-get install -y nodejs npm
+  ln -s /usr/bin/nodejs /usr/bin/node
 fi
 echo "nodejs: $(nodejs -v)" | head -n 1
 
@@ -63,7 +68,7 @@ echo "nodejs: $(nodejs -v)" | head -n 1
 if ! (which grunt 1>/dev/null 2>&1) ; then
   echo "Installing Grunt cli ..."
 
-  sudo npm install -g grunt-cli
+  npm install -g grunt-cli
 fi
 echo "grunt: $(grunt --version)" | head -n 1
 
@@ -73,7 +78,7 @@ echo "grunt: $(grunt --version)" | head -n 1
 if ! (which bower 1>/dev/null 2>&1) ; then
   echo "Installing Grunt cli ..."
 
-  sudo npm install -g bower
+  npm install -g bower
 fi
 echo "bower: $( bower --version)" | head -n 1
 
@@ -83,9 +88,9 @@ echo "bower: $( bower --version)" | head -n 1
 if ! (which nginx 1>/dev/null 2>&1) ; then
   echo "Installing nginx..."
 
-  sudo apt-get install -y nginx
-  sudo sed -i '/#server_names_hash_bucket_size 64/server_names_hash_bucket_size 1024/g' /etc/nginx/nginx.conf;
-  sudo service nginx reload
+  apt-get install -y nginx
+  sed -i '/#server_names_hash_bucket_size 64/server_names_hash_bucket_size 1024/g' /etc/nginx/nginx.conf;
+  service nginx reload
 fi
 echo "nginx: $(nginx -v 2>&1 | awk -F '/' '/nginx/ { print $2 }')"
 
@@ -95,7 +100,7 @@ echo "nginx: $(nginx -v 2>&1 | awk -F '/' '/nginx/ { print $2 }')"
 if ! (which vim 1>/dev/null 2>&1) ; then
   echo "Installing vim..."
 
-  sudo apt-get install -y vim
+  apt-get install -y vim
 fi
 echo "vim: $(vim --version)" | head -n 1
 
@@ -105,7 +110,7 @@ echo "vim: $(vim --version)" | head -n 1
 if ! (which tig 1>/dev/null 2>&1) ; then
   echo "Installing tig..."
 
-  sudo apt-get install -y tig
+  apt-get install -y tig
 fi
 echo "tig: $(tig --version)" | head -n 1
 
@@ -116,8 +121,8 @@ echo "tig: $(tig --version)" | head -n 1
 if ! (which floomatic 1>/dev/null 2>&1) ; then
   echo "Installing floomatic..."
 
-  sudo apt-get install -y libqt4-dev
-  sudo npm install -g floomatic
+  apt-get install -y libqt4-dev
+  npm install -g floomatic
 fi
 echo "floomatic: installed" # printing the actual version number currently throws an ugly warning: $(floomatic --version)" | head -n 1
 
@@ -127,7 +132,7 @@ echo "floomatic: installed" # printing the actual version number currently throw
 if ! (which jq 1>/dev/null 2>&1) ; then
   echo "Installing aws cli..."
 
-  sudo apt-get install jq -y
+  apt-get install jq -y
 fi
 echo "jq: $(jq --version 2>&1)" | head -n 1
 
@@ -137,15 +142,15 @@ echo "jq: $(jq --version 2>&1)" | head -n 1
 if ! (which aws 1>/dev/null 2>&1) ; then
   echo "Installing aws cli..."
 
-  sudo apt-get install -y python-pip
-  sudo pip install --upgrade awscli httpie
-  sudo bash -c "complete -C '/usr/local/bin/aws_completer' aws"
+  apt-get install -y python-pip
+  pip install --upgrade awscli httpie
+  bash -c "complete -C '/usr/local/bin/aws_completer' aws"
 fi
 echo "awscli: $(aws --version 2>&1)" | head -n 1
 echo "python: $(python --version 2>&1)" | head -n 1
 
 # Ensure all users have access to /tmp
-sudo chmod 777 /tmp
+chmod 777 /tmp
 
 echo "=-=-=-=-=-=-=-=-=-=-=-="
 echo "Provisioning completed!"
