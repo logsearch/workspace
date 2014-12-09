@@ -142,8 +142,7 @@ if ! (which aws 1>/dev/null 2>&1) ; then
   sudo bash -c "complete -C '/usr/local/bin/aws_completer' aws"
 fi
 echo "awscli: $(aws --version 2>&1)" | head -n 1
-
-
+echo "python: $(python --version 2>&1)" | head -n 1
 
 # Ensure all users have access to /tmp
 sudo chmod 777 /tmp
