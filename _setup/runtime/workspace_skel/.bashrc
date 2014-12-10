@@ -158,3 +158,5 @@ git config --global credential.helper 'cache --timeout=3600'
 git config --global user.email "$GIT_EMAIL"
 git config --global user.name "$GIT_NAME"
 
+#Enable command completions
+complete -C '/usr/local/bin/aws_completer' aws
