@@ -34,7 +34,6 @@ fi
 #
 # system: curl
 #
-
 if [ ! -f /usr/bin/curl ]; then
   echo "Installing curl"
   apt-get install curl -y
@@ -132,6 +131,16 @@ if ! (which jq 1>/dev/null 2>&1) ; then
   apt-get install jq -y
 fi
 echo "jq: $(jq --version 2>&1)" | head -n 1
+
+#
+# util: htop
+#
+if ! (which htop 1>/dev/null 2>&1) ; then
+  echo "Installing htop..."
+
+  apt-get install htop -y
+fi
+echo "htop: $(htop --version 2>&1)" | head -n 1
 
 #
 # util: tree
