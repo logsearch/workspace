@@ -155,6 +155,6 @@ source ~/.env
 
 #Turn on the credential helper so that Git will save your credentials in memory 1 hour.
 git config --global credential.helper 'cache --timeout=3600'
-git config --global user.email '$GIT_EMAIL'
-git config --global user.name '$GIT_NAME'
+git config --global user.email "$GIT_EMAIL"
+git config --global user.name "$GIT_NAME"
 

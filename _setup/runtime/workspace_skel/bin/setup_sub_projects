@@ -2,31 +2,37 @@
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 WORKSPACE_DIR=$( cd "$SCRIPT_DIR" && cd .. && pwd )
 
+echo "################################"
+echo "Fetching public repos"
+echo "################################"
+
 echo "Fetching logsearch-boshrelease"
 echo "################################"
-git clone --recursive https://github.com/logsearch/logsearch-boshrelease.git $WORKSPACE_DIR/src/logsearch-boshrelease
-
-echo "Fetching labs-operations"
-echo "################################"
-git clone --recursive https://github.com/cityindex/labs-operations.git $WORKSPACE_DIR/environments/labs-operations
-cd $WORKSPACE_DIR/environments/labs-operations
-find . -name .bosh_config.default | sed -e "p;s/.default//" | xargs -n2 cp
+git clone --recursive git@github.com:logsearch/logsearch-boshrelease.git $WORKSPACE_DIR/src/logsearch-boshrelease
 
 echo "Fetching logsearch documentation"
 echo "################################"
-git clone https://github.com/logsearch/docs.git $WORKSPACE_DIR/src/docs
+git clone git@github.com:logsearch/docs.git $WORKSPACE_DIR/src/docs
 
 echo "Fetching logsearch-website"
 echo "################################"
-git clone https://github.com/logsearch/logsearch-website.git $WORKSPACE_DIR/src/logsearch-website
-
-echo "Fetching logsearch-filters-internal"
-echo "################################"
-git clone --recursive https://github.com/cityindex/logsearch-filters-internal.git $WORKSPACE_DIR/src/logsearch-filters-internal
-cd $WORKSPACE_DIR/src/logsearch-filters-internal
+git clone git@github.com:logsearch/logsearch-website.git $WORKSPACE_DIR/src/logsearch-website
 
 echo "Fetching kibana4"
 echo "################################"
-git clone --recursive https://github.com/elasticsearch/kibana.git $WORKSPACE_DIR/src/kibana
-git clone --recursive https://mrdavidlaing@github.com/logsearch/kibana-status-diagram-plugin.git $WORKSPACE_DIR/src/kibana-status-diagram-plugin
+git clone --recursive git@github.com:elasticsearch/kibana.git $WORKSPACE_DIR/src/kibana
+git clone --recursive git@github.com:logsearch/kibana-status-diagram-plugin.git $WORKSPACE_DIR/src/kibana-status-diagram-plugin
 
+echo "################################"
+echo "Fetching private repos"
+echo "################################"
+
+echo "Fetching labs-operations"
+echo "################################"
+git clone --recursive git@github.com:cityindex/labs-operations.git $WORKSPACE_DIR/environments/labs-operations
+cd $WORKSPACE_DIR/environments/labs-operations
+find . -name .bosh_config.default | sed -e "p;s/.default//" | xargs -n2 cp
+
+echo "Fetching logsearch-filters-internal"
+echo "################################"
+git clone --recursive git@github.com:cityindex/logsearch-filters-internal.git $WORKSPACE_DIR/src/logsearch-filters-internal
