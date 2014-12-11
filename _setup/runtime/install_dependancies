@@ -171,6 +171,10 @@ chmod 777 /tmp
 # Display "help" at login
 cp $SCRIPT_DIR/motd /etc/motd
 
+# Allow forwarding of all ENV variables via SSH
+sed -i 's/AcceptEnv\ LANG/AcceptEnv\ \*\ LANG/g' /etc/ssh/sshd_config
+service ssh reload
+
 echo "=-=-=-=-=-=-=-=-=-=-=-="
 echo "Provisioning completed!"
 echo "=-=-=-=-=-=-=-=-=-=-=-="

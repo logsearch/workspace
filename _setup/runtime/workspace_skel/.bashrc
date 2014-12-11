@@ -144,19 +144,29 @@ prompt() {
 PROMPT_COMMAND=prompt
 
 #Configure environment variables
+validate_env_exists() {
+ eval ENV_VALUE=\$$1
+ if [ "$ENV_VALUE" == "" ]; then
+   echo -e "\x1B[01;91m ERROR: You must set environment var: $1 \x1B[0m"
+ fi
+}
+
 export BOSH_CONFIG=.bosh_config
-source ~/.env
+#Env vars can be overridden by exporting them in ~/.env
+if [ -f "~/.env" ]; then
+ source ~/.env
+fi
 
 #Validate that the required values are set
-: ${AWS_ACCESS_KEY_ID:?"Need to set environment var: AWS_ACCESS_KEY_ID"}
-: ${AWS_SECRET_ACCESS_KEY:?"Need to set environment var: AWS_SECRET_ACCESS_KEY"}
-: ${GIT_EMAIL:?"Need to set environment var: GIT_EMAIL"}
-: ${GIT_NAME:?"Need to set environment var: GIT_NAME"}
+validate_env_exists AWS_ACCESS_KEY_ID
+validate_env_exists AWS_SECRET_ACCESS_KEY
+validate_env_exists GIT_AUTHOR_NAME
+validate_env_exists GIT_AUTHOR_EMAIL
+export GIT_COMMITTER_NAME="${GIT_COMMITTER_NAME:-"$GIT_AUTHOR_NAME"}"
+export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-"$GIT_AUTHOR_EMAIL"}"
 
 #Turn on the credential helper so that Git will save your credentials in memory 1 hour.
 git config --global credential.helper 'cache --timeout=3600'
-git config --global user.email "$GIT_EMAIL"
-git config --global user.name "$GIT_NAME"
 
 #Enable command completions
 complete -C '/usr/local/bin/aws_completer' aws
