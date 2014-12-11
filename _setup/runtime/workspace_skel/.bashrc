@@ -144,24 +144,23 @@ prompt() {
 PROMPT_COMMAND=prompt
 
 #Configure environment variables
-validate_env_exists() {
+warn_if_env_missing() {
  eval ENV_VALUE=\$$1
  if [ "$ENV_VALUE" == "" ]; then
-   echo -e "\x1B[01;91m ERROR: You must set environment var: $1 \x1B[0m"
+   echo -e "\x1B[01;33m WARNING: Environment var: $1 is not set.  You won't be able to $2. \x1B[0m"
  fi
 }
-
+#Configure environment variables
 export BOSH_CONFIG=.bosh_config
-#Env vars can be overridden by exporting them in ~/.env
 if [ -f "~/.env" ]; then
  source ~/.env
 fi
 
 #Validate that the required values are set
-validate_env_exists AWS_ACCESS_KEY_ID
-validate_env_exists AWS_SECRET_ACCESS_KEY
-validate_env_exists GIT_AUTHOR_NAME
-validate_env_exists GIT_AUTHOR_EMAIL
+warn_if_env_missing AWS_ACCESS_KEY_ID "interact with your AWS account"
+warn_if_env_missing AWS_SECRET_ACCESS_KEY "interact with your AWS account"
+warn_if_env_missing GIT_AUTHOR_NAME "commit changes to Git"
+warn_if_env_missing GIT_AUTHOR_EMAIL "commit changes to Git"
 export GIT_COMMITTER_NAME="${GIT_COMMITTER_NAME:-"$GIT_AUTHOR_NAME"}"
 export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-"$GIT_AUTHOR_EMAIL"}"
 
