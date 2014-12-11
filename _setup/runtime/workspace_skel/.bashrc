@@ -143,6 +143,11 @@ prompt() {
 
 PROMPT_COMMAND=prompt
 
+#Ensure SSH private key exists
+if [ ! -f "~/.ssh/id_rsa" ]; then
+  ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''
+fi
+
 #Configure environment variables
 warn_if_env_missing() {
  eval ENV_VALUE=\$$1
