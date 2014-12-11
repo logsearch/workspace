@@ -144,8 +144,9 @@ prompt() {
 PROMPT_COMMAND=prompt
 
 #Ensure SSH private key exists
-if [ ! -f "~/.ssh/id_rsa" ]; then
-  ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''
+if [ ! -f ~/.ssh/id_rsa ]; then
+  echo "Generating local SSH key"
+  ssh-keygen -f ~/.ssh/id_rsa -t rsa -N '' > /dev/null
 fi
 
 #Configure environment variables
@@ -157,7 +158,8 @@ warn_if_env_missing() {
 }
 #Configure environment variables
 export BOSH_CONFIG=.bosh_config
-if [ -f "~/.env" ]; then
+if [ -f ~/.env ]; then
+ echo "Loading ENV variables from ~/.env"
  source ~/.env
 fi
 
