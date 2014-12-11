@@ -1,6 +1,3 @@
-# better error messages from Hash.fetch
-env = ENV.to_hash
-
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.require_version ">= 1.6.5"
@@ -15,8 +12,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell", run: "always", inline: <<EOF 
     echo "export AWS_SECRET_ACCESS_KEY=#{ENV['AWS_SECRET_ACCESS_KEY']}
 export AWS_ACCESS_KEY_ID=#{ENV['AWS_ACCESS_KEY_ID']}
-export GIT_EMAIL='#{`git config --global user.email`.chomp}'
-export GIT_NAME='#{`git config --global user.name`.chomp}'" > /home/vagrant/.env
+export GIT_AUTHOR_EMAIL='#{`git config --global user.email`.chomp}'
+export GIT_AUTHOR_NAME='#{`git config --global user.name`.chomp}'" > /home/vagrant/.env
 EOF
   config.vm.provision "shell", inline: <<EOF 
 WORKSPACE_HOMEDIRS=/home \

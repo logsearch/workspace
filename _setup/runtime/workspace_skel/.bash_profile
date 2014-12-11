@@ -141,13 +141,14 @@ prompt() {
   PS1="[logsearch workspace] $(working_directory)$(parse_git_branch)$(parse_remote_state)$exit_status"
 }
 
-PROMPT_COMMAND=prompt
-
 #Ensure SSH private key exists
 if [ ! -f ~/.ssh/id_rsa ]; then
   echo "Generating local SSH key"
   ssh-keygen -f ~/.ssh/id_rsa -t rsa -N '' > /dev/null
 fi
+
+#Set up the interactive prompt
+PROMPT_COMMAND=prompt
 
 #Configure environment variables
 warn_if_env_missing() {
@@ -176,3 +177,4 @@ git config --global credential.helper 'cache --timeout=3600'
 
 #Enable command completions
 complete -C '/usr/local/bin/aws_completer' aws
+
