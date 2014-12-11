@@ -1,67 +1,51 @@
 # LogSearch WorkSpace
 
 ## Purpose
+To provide a workspace containing all the configuration, source code and dependancies for for operating and developing a LogSearch cluster.  
 
-To provide a workspace for operating and developing a LogSearch cluster.  
+Using this workspace you can easily:
 
-The workspace is comprised of a local folder (where you can edit), a remote folder (when you can run things) and tooling to help you sync between both.  The local portion can be run anywhere which has a BASH shell; the remote must be a BOSH lite Ubuntu 14.04 server (either running under Vagrant, or within your cloud; eg EC2)
+* Launch a test LogSearch cluster (in a local Vagrant VM or a remote EC2 VM)
+* Deploy and administer a production multi-VM LogSearch cluster - using configuration as code
+* Develop and customise the LogSearch components and make your own LogSearch release
 
-## Setup
+## Getting started
 
-### Remote
+### Single user local Vagrant VM
 
-#### EC2 server
+0. You need to have installed:
+    * Git 1.8+
+    * Vagrant 1.6.5+
+    * VirtualBox 4.3.18+
+    * A SSH client
+0. Launch a Vagrant VM (This downloads about ~2GB of data)
 
-_We recommend that you have one member of your team set up a remote server in EC2 for everyone to share_
+        git clone https://github.com/logsearch/workspace ~/logsearch-workspace
+        cd ~/logsearch-workspace
+        vagrant up
+          
+0. SSH into your workspace
+    * Using the default SSH client on Mac: `vagrant ssh`
+    * Using a customised SSH client (eg, Kitty for Windows), you can get the SSH settings using `vagrant ssh-config`
 
-* An server running within your VPC based a LogSearch Workspace AMI (eg: ami-4c4cfe3b )
-  * size: m3.xlarge
-  * security group: One with full access to other machines in your VPC
-* SSH in and become `root`
-```
-sudo -i
-apt-get update && apt-get install git -y
-git clone https://github.com/logsearch/workspace /root/logsearch-workspace
-cd /root/logsearch-workspace
-_setup_remote/install_dependancies
-```
-* Add a remote workspace for each team member
-```
-cd /root/logsearch-workspace
-WORKSPACE_USERNAME="usernaxxxxxx" WORKSPACE_PUBLIC_KEY="ssh-rsa AAAxxxx" _setup_remote/setup_workspace
-```
+0. Perform one of the common LogSearch Workspace tasks, eg:
+    * [Launch your own test LogSearch cluster](docs/LaunchTestLogSearchCluster.md)
+    * [Administer an existing LogSearch cluster](docs/AdministerLogSearchCluster.md)
+    * [Develop & deploy a new Log Parsing filter](docs/DevelopAndDeployALogParsingFilter.md)
 
-#### Vagrant server
+#### Multi-user VM on EC2
 
-* Install
-	* Vagrant 1.6.5+
-	* VirtualBox 4.3.18+
-* Launch a Vagrant machine
-```
-git clone https://github.com/logsearch/workspace ~/logsearch-workspace
-cd ~/logsearch-workspace/_setup_remote
-vagrant up
-```
-* SSH in and become `root`
-```
-vagrant ssh
-sudo -i
-```
-* Add a remote workspace for each team member
-```
-cd /root/logsearch-workspace
-WORKSPACE_USERNAME="usernaxxxxxx" WORKSPACE_PUBLIC_KEY="ssh-rsa AAAxxxx" _setup_remote/setup_workspace
-```
+You can run multiple LogSearch Workspaces on a single VM (running inside your datacentre).  
 
-### Local 
+This simplifies setup & maintenance of the LogSearch Workspace for team members, especially if they use Windows or have poor internet connections
 
-* You will need the remote connection details obtained during the adding of your remote workspace above
-* Open a BASH shell.  (ie, the Mac OSX terminal or the shell that comes bundled with SourceTree on Windows)
+This VM is also a good location to host your Continuous Integration build agents, or Chatbots that need to interact with your LogSearch infrastructure.
 
-```
-git clone https://github.com/logsearch/workspace ~/logsearch-workspace
-cd ~/logsearch-workspace
-bin/check_dependancies # Fix any dependancy errors reported
-bin/connect 
-bin/init
-```
+See [How to setup a Multi-User LogSearch Workspace](docs/SetupMultiUserLogSearchWorkspace.md) for details.
+
+## Further documentation
+
+See the [Documentation](docs/README.md) for more examples of things you can do with the LogSearch Workspace
+## Copyright and License
+
+Copyright 2014 City Index Ltd.  Licensed under [Apache License 2.0](./LICENSE)

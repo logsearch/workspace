@@ -1,0 +1,12 @@
+---
+target: https://127.0.0.1:25555
+target_name: Bosh Lite Director
+target_version: 1.2749.0 (00000000)
+target_uuid: 594d9100-3d50-465d-9294-445ee5f9da7b
+aliases:
+  target:
+    594d9100-3d50-465d-9294-445ee5f9da7b: https://127.0.0.1:25555
+auth:
+  https://127.0.0.1:25555:
+    username: admin
+    password: admin

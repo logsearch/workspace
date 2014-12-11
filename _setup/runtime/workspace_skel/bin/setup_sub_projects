@@ -7,19 +7,19 @@ echo "Fetching public repos"
 echo "################################"
 
 echo "Fetching logsearch-boshrelease"
-echo "################################"
+echo "------------------------------"
 git clone --recursive git@github.com:logsearch/logsearch-boshrelease.git $WORKSPACE_DIR/src/logsearch-boshrelease
 
 echo "Fetching logsearch documentation"
-echo "################################"
+echo "--------------------------------"
 git clone git@github.com:logsearch/docs.git $WORKSPACE_DIR/src/docs
 
 echo "Fetching logsearch-website"
-echo "################################"
+echo "--------------------------"
 git clone git@github.com:logsearch/logsearch-website.git $WORKSPACE_DIR/src/logsearch-website
 
 echo "Fetching kibana4"
-echo "################################"
+echo "-----------------"
 git clone --recursive git@github.com:elasticsearch/kibana.git $WORKSPACE_DIR/src/kibana
 git clone --recursive git@github.com:logsearch/kibana-status-diagram-plugin.git $WORKSPACE_DIR/src/kibana-status-diagram-plugin
 
@@ -28,11 +28,22 @@ echo "Fetching private repos"
 echo "################################"
 
 echo "Fetching labs-operations"
-echo "################################"
-git clone --recursive git@github.com:cityindex/labs-operations.git $WORKSPACE_DIR/environments/labs-operations
-cd $WORKSPACE_DIR/environments/labs-operations
-find . -name .bosh_config.default | sed -e "p;s/.default//" | xargs -n2 cp
+echo "------------------------"
+git ls-remote "git@github.com:cityindex/labs-operations.git" > /dev/null 2>&1
+if [ "$?" -ne 0 ]; then
+    echo "WARNING: Unable to read from 'git@github.com:cityindex/labs-operations.git'"
+else
+   git clone --recursive git@github.com:cityindex/labs-operations.git $WORKSPACE_DIR/environments/labs-operations
+   cd $WORKSPACE_DIR/environments/labs-operations
+   find . -name .bosh_config.default | sed -e "p;s/.default//" | xargs -n2 cp
+fi
 
 echo "Fetching logsearch-filters-internal"
-echo "################################"
-git clone --recursive git@github.com:cityindex/logsearch-filters-internal.git $WORKSPACE_DIR/src/logsearch-filters-internal
+echo "-----------------------------------"
+git ls-remote "git@github.com:cityindex/logsearch-filters-internal.git" > /dev/null 2>&1
+if [ "$?" -ne 0 ]; then
+    echo "WARNING: Unable to read from 'git@github.com:cityindex/logsearch-filters-internal.git'"
+else
+   git clone --recursive git@github.com:cityindex/logsearch-filters-internal.git $WORKSPACE_DIR/src/logsearch-filters-internal
+fi
+
