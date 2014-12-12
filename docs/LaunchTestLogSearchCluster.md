@@ -186,3 +186,11 @@ This provides a quick and cheap way to simluate running a LogSearch cluster
         Duration	00:04:30
         
         Deployed `manifest.yml' to `Bosh Lite Director'
+
+0.  Ship in data
+      * @todo - point to scripts that inject some test data
+
+0.  API
+      * @todo - demo api via Curl
+0.  Browse to kibana
+      * @todo - Kibana should be exposed on localhost:on where is kibana?
