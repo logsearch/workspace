@@ -1,20 +1,73 @@
-#!/usr/bin/env bash
-SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+#!/usr/bin/env ruby
+abort "ERROR: add_new_workspace must be run as root user" unless `id -u`.to_i == 0
+SCRIPT_DIR=File.expand_path(File.dirname(__FILE__))
+require 'optparse'
 
-if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
-fi
+options = {}
+opts = OptionParser.new do |opts|
+  opts.banner = "Usage: add_new_workspace [options] "
 
-WORKSPACE_HOMEDIRS=${WORKSPACE_HOMEDIRS:?"env WORKSPACE_HOMEDIRS must be defined"}
-WORKSPACE_USERNAME=${WORKSPACE_USERNAME:?"env WORKSPACE_USERNAME must be defined"}
-WORKSPACE_PUBLIC_KEY=${WORKSPACE_PUBLIC_KEY?"env WORKSPACE_PUBLIC_KEY must be defined"}
+  opts.on("--workspace-homedirs FOLDER", "Base location for workspace folders, eg /workspaces - REQUIRED") do |folder|
+    options[:workspace_homedirs] = folder
+  end
 
-id -u $WORKSPACE_USERNAME &>/dev/null || adduser --home $WORKSPACE_HOMEDIRS/$WORKSPACE_USERNAME --disabled-password --gecos "" $WORKSPACE_USERNAME
-adduser $WORKSPACE_USERNAME docker
-rsync -rtv $SCRIPT_DIR/workspace_skel/ $WORKSPACE_HOMEDIRS/$WORKSPACE_USERNAME/
+  opts.on("--workspace-username USERNAME", "workspace user, eg janesmith - REQUIRED") do |username|
+    options[:username] = username
+  end
 
-echo $WORKSPACE_PUBLIC_KEY >> $WORKSPACE_HOMEDIRS/$WORKSPACE_USERNAME/.ssh/authorized_keys
+  opts.on("--workspace-public-key PUBLIC_KEY", "Public key for user - REQUIRED") do |public_key|
+    options[:public_key] = public_key
+  end
 
-chown -R $WORKSPACE_USERNAME:$WORKSPACE_USERNAME $WORKSPACE_HOMEDIRS/$WORKSPACE_USERNAME
+  opts.on("--workspace-local-ip LOCAL_IP", "local ip of workspace - REQUIRED if not on AWS") do |local_ip|
+  	#Assume AWS ip
+    options[:local_ip] = local_ip
+  end
+
+  opts.on("--workspace-tenant-number NUMBER", "Used to segregate internal container IPs & port mappings. Valid values: [0 - 9]") do |tenant_number|
+    options[:tenant_number] = tenant_number
+  end
+
+end
+opts.parse!
+abort(opts.to_s) if options[:workspace_homedirs].nil?
+abort(opts.to_s) if options[:username].nil?
+abort(opts.to_s) if options[:public_key].nil?
+options[:tenant_number] = 0 if options[:tenant_number].nil?
+options[:local_ip] = `curl -s http://169.254.169.254/latest/meta-data/local-ipv4` if options[:local_ip].nil?
+abort(opts.to_s) if options[:local_ip] == ""
+options[:home_dir] = File.join(options[:workspace_homedirs], options[:username])
+
+puts options
+
+if `id -u #{options[:username]} 2>&1` =~ /.*no such user.*/ then
+ `adduser --home #{options[:home_dir]} --disabled-password --gecos "" #{options[:username]}`
+end
+`adduser #{options[:username]} docker`
+`rsync -rtv #{SCRIPT_DIR}/workspace_skel/ #{options[:home_dir]}/`
+
+`echo "#{options[:public_key]}" >> #{options[:home_dir]}/.ssh/authorized_keys`
+
+`chown -R #{options[:username]}:#{options[:username]} #{options[:home_dir]}`
+
+def expose_container(local_ip, local_port, container_ip, container_port, options) 
+  rule = "PREROUTING -p tcp -d #{local_ip} --dport #{local_port} -j DNAT --to #{container_ip}:#{container_port}"
+  added = ""
+  if `iptables -t nat -C #{rule} 2>&1`.to_s != "" then
+    added = "Adding "
+    `iptables -t nat -A #{rule}`
+    `iptables-save > /etc/iptables/rules.v4`
+  end
+  puts "#{added}TCP port mapping: #{local_ip}:#{local_port} -> #{container_ip}:#{container_port}"
+  `echo '    #{local_ip}:#{local_port} -> #{container_ip}:#{container_port}' >> #{options[:home_dir]}/port_mappings.txt`
+end
+
+`echo 'Port Mappings:' > #{options[:home_dir]}/port_mappings.txt`
+expose_container options[:local_ip], "1#{options[:tenant_number]}080",  "10.244.#{options[:tenant_number]}.2", 80, options
+expose_container options[:local_ip], "1#{options[:tenant_number]}443", "10.244.#{options[:tenant_number]}.14", 443, options
+expose_container options[:local_ip], "1#{options[:tenant_number]}514", "10.244.#{options[:tenant_number]}.14", 5514, options
+expose_container options[:local_ip], "1#{options[:tenant_number]}515", "10.244.#{options[:tenant_number]}.14", 5515, options
+
+`echo 'export LOCAL_IP="#{options[:local_ip]}"' >> #{options[:home_dir]}/.bash_profile`
+`echo 'export TENANT_NUMBER=#{options[:tenant_number]}' >> #{options[:home_dir]}/.bash_profile`
 

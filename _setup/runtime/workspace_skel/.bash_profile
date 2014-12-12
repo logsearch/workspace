@@ -178,3 +178,5 @@ git config --global credential.helper 'cache --timeout=3600'
 #Enable command completions
 complete -C '/usr/local/bin/aws_completer' aws
 
+#Output port mappings that have been setup
+cat ~/port_mappings.txt

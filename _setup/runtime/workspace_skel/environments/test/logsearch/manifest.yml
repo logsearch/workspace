@@ -1,7 +1,7 @@
 <%
 director_uuid = `bosh status | grep UUID | awk '{print $2}'` 
 deployment_name = "#{ENV['USER']}-logsearch"
-IP_ADDRESS_SUFFIX = ENV.fetch("IP_ADDRESS_SUFFIX", 4).to_i
+tenant_number = ENV.fetch("TENANT_NUMBER", 0).to_i
 %>
 
 ---
@@ -49,7 +49,7 @@ jobs:
   networks:
   - name: az1
     static_ips:
-    - 10.24<%=IP_ADDRESS_SUFFIX%>.2.2
+    - 10.244.<%=tenant_number%>.2
   properties:
     collectd:
       python_elasticsearch:
@@ -78,7 +78,7 @@ jobs:
   networks:
   - name: az1
     static_ips:
-    - 10.24<%=IP_ADDRESS_SUFFIX%>.2.14
+    - 10.244.<%=tenant_number%>.14
 
 - name: queue
   release: logsearch
@@ -90,7 +90,7 @@ jobs:
   networks:
   - name: az1
     static_ips:
-    - 10.24<%=IP_ADDRESS_SUFFIX%>.2.10
+    - 10.244.<%=tenant_number%>.10
   properties:
     collectd:
       python_redis:
@@ -121,7 +121,7 @@ jobs:
   networks:
   - name: az1
     static_ips:
-    - 10.24<%=IP_ADDRESS_SUFFIX%>.2.6
+    - 10.244.<%=tenant_number%>.6
   persistent_disk: 1024
   properties:
     collectd:
@@ -154,11 +154,11 @@ jobs:
         allow_master: false
 
 # upload your backfill data
-# $ sshpass -pc1oudc0w scp -i "$HOME/.ssh/vagrant" 2014102721.20141027220003-api-0.log.xz vcap@10.24<%=IP_ADDRESS_SUFFIX%>.2.26:/tmp/backfill.xz
+# $ sshpass -pc1oudc0w scp -i "$HOME/.ssh/vagrant" 2014102721.20141027220003-api-0.log.xz vcap@10.244.<%=tenant_number%>.26:/tmp/backfill.xz
 # restart ingestion of it all
-# $ sshpass -pc1oudc0w ssh -i "$HOME/.ssh/vagrant" vcap@10.24<%=IP_ADDRESS_SUFFIX%>.2.26 "echo c1oudc0w | sudo -p '' -S /var/vcap/jobs/ingestor_archiver/bin/reload /tmp/backfill.xz"
+# $ sshpass -pc1oudc0w ssh -i "$HOME/.ssh/vagrant" vcap@10.244.<%=tenant_number%>.26 "echo c1oudc0w | sudo -p '' -S /var/vcap/jobs/ingestor_archiver/bin/reload /tmp/backfill.xz"
 # utility if you want to block until complete
-# $ sshpass -pc1oudc0w ssh -i "$HOME/.ssh/vagrant" vcap@10.24<%=IP_ADDRESS_SUFFIX%>.2.26 "echo c1oudc0w | sudo -p '' -S /var/vcap/jobs/ingestor_archiver/bin/wait-until-loaded"
+# $ sshpass -pc1oudc0w ssh -i "$HOME/.ssh/vagrant" vcap@10.244.<%=tenant_number%>.26 "echo c1oudc0w | sudo -p '' -S /var/vcap/jobs/ingestor_archiver/bin/wait-until-loaded"
 #- name: restorer
 #  release: logsearch
 #  templates:
@@ -184,7 +184,7 @@ properties:
       #email: nobody@example.com
       #api_token: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
   elasticsearch:
-    host: 10.24<%=IP_ADDRESS_SUFFIX%>.2.2
+    host: 10.244.<%=tenant_number%>.2
     cluster_name: logsearch--bosh-lite
     drain: true
     indices:
@@ -193,7 +193,7 @@ properties:
       environment:
         ES_HEAP_SIZE: 256M
   redis:
-    host: 10.24<%=IP_ADDRESS_SUFFIX%>.2.10
+    host: 10.244.<%=tenant_number%>.10
   logstash_parser:
     debug: true
 <% filtersconf = File.join(File.dirname(File.expand_path(__FILE__)), 'examples/filters.conf') %>
@@ -292,89 +292,26 @@ networks:
   subnets:
   - cloud_properties:
       name: random
-    range: 10.244.2.0/30
-    reserved:
-    - 10.244.2.1
+    range: 10.244.<%=tenant_number%>.0/27
     static:
-    - 10.244.2.2
+    - 10.244.<%=tenant_number%>.1
+    - 10.244.<%=tenant_number%>.2
+    - 10.244.<%=tenant_number%>.3
+    - 10.244.<%=tenant_number%>.4
+    - 10.244.<%=tenant_number%>.5
+    - 10.244.<%=tenant_number%>.6
+    - 10.244.<%=tenant_number%>.7
+- name: az2
+  subnets:
   - cloud_properties:
       name: random
-    range: 10.244.2.4/30
-    reserved:
-    - 10.244.2.5
+    range: 10.244.<%=tenant_number%>.32/27
     static:
-    - 10.244.2.6
-  - cloud_properties:
-      name: random
-    range: 10.244.2.8/30
-    reserved:
-    - 10.244.2.9
-    static: 
-    - 10.244.2.10
-  - cloud_properties:
-      name: random
-    range: 10.244.2.12/30
-    reserved:
-    - 10.244.2.13
-    static: 
-    - 10.244.2.14
-  - cloud_properties:
-      name: random
-    range: 10.244.2.16/30
-    reserved:
-    - 10.244.2.17
-    static: []
-  - cloud_properties:
-      name: random
-    range: 10.244.2.20/30
-    reserved:
-    - 10.244.2.21
-    static: []
-  - cloud_properties:
-      name: random
-    range: 10.244.2.24/30
-    reserved:
-    - 10.244.2.25
-    static: []
-  - cloud_properties:
-      name: random
-    range: 10.244.2.28/30
-    reserved:
-    - 10.244.2.29
-    static: []
-  - cloud_properties:
-      name: random
-    range: 10.244.2.32/30
-    reserved:
-    - 10.244.2.33
-    static: []
-  - cloud_properties:
-      name: random
-    range: 10.244.2.36/30
-    reserved:
-    - 10.244.2.37
-    static: []
-  - cloud_properties:
-      name: random
-    range: 10.244.2.40/30
-    reserved:
-    - 10.244.2.41
-    static: []
-  - cloud_properties:
-      name: random
-    range: 10.244.2.44/30
-    reserved:
-    - 10.244.2.45
-    static: []
-  - cloud_properties:
-      name: random
-    range: 10.244.2.48/30
-    reserved:
-    - 10.244.2.49
-    static: []
-  - cloud_properties:
-      name: random
-    range: 10.244.2.52/30
-    reserved:
-    - 10.244.2.53
-    static: []
+    - 10.244.<%=tenant_number%>.33
+    - 10.244.<%=tenant_number%>.34
+    - 10.244.<%=tenant_number%>.35
+    - 10.244.<%=tenant_number%>.36
+    - 10.244.<%=tenant_number%>.37
+    - 10.244.<%=tenant_number%>.38
+    - 10.244.<%=tenant_number%>.39
+    - 10.244.<%=tenant_number%>.40

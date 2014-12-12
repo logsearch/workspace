@@ -175,6 +175,14 @@ cp $SCRIPT_DIR/motd /etc/motd
 sed -i 's/AcceptEnv\ LANG/AcceptEnv\ \*\ LANG/g' /etc/ssh/sshd_config
 service ssh reload
 
+# Forward traffic to the warden containers
+if [ $(dpkg-query -W -f='${Status}' iptables-persistent 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+  echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
+  echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
+  apt-get install iptables-persistent -y
+fi
+
 echo "=-=-=-=-=-=-=-=-=-=-=-="
 echo "Provisioning completed!"
 echo "=-=-=-=-=-=-=-=-=-=-=-="

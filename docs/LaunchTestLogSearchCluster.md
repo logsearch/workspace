@@ -191,6 +191,10 @@ This provides a quick and cheap way to simluate running a LogSearch cluster
       * @todo - point to scripts that inject some test data
 
 0.  API
-      * @todo - demo api via Curl
+      * From inside the workspace, run `bosh vms` to see the IP address of the `api/0` node.
+          * You can send HTTP requests to this JSON API, eg: `curl http://10.244.0.2:80`
+      * A number of external ports have been mapped to the internal IPs - `cat ~/port_mappings.txt` to see which these are.
+          * You can send HTTP request to this JSON API from outside the workspace, eg: `curl http://10.244.0.2:80`    
+
 0.  Browse to kibana
       * @todo - Kibana should be exposed on localhost:on where is kibana?
