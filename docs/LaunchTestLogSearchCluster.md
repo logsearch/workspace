@@ -5,9 +5,9 @@ The LogSearch Workspace contains a copy of bosh-lite, which enables you to deplo
 This provides a quick and cheap way to simluate running a LogSearch cluster
 
 0. SSH into your workspace
-0. Navigate to the test environment
+0. Navigate to the local test environment
 
-        cd ~/environments/test
+        cd ~/environments/local/test
 
 0. Ensure the `bosh-warden-boshlite-ubuntu-trusty-go_agent` stemcell exists
 

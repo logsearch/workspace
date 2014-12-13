@@ -8,10 +8,10 @@ Clone this into the `~/environments` folder inside your workspace, eg:
 
      git clone git@github.com:cityindex/labs-operations.git ~/environments/cityindex
 
-We recommend that you group everything related to an environment in its own folder, and everything related to a specific deployment in a folder below that.  For example, 
+We recommend that you group everything related to an organisation in its own folder, everything related to an environemnt in its own folder, and everything related to a specific deployment in a folder below that.  For example, 
 
     ~/environments/
-        cityindex/
+        cityindex/             # Everything related to the cityindex organisation
             live/              # Everything related to the live environment
                 aws-vpc/
                 bosh/
@@ -29,7 +29,7 @@ This means that you can change which environment you are targetting by simply ch
 
 For example
 
-    cd ~/environments/test   
+    cd ~/environments/local/test   
     bosh vms                  # Will list the deployments and VMs running in your local test environment
 
     cd ~/environments/cityindex/test   
@@ -38,7 +38,7 @@ For example
 
  To target a specific cluster, use `bosh`'s `-d` parameter
 
-    cd ~/environments/test   
+    cd ~/environments/local/test   
     bosh -d logsearch/manifest.yml deploy  # Deploys changes to your local test environments' LogSearch cluster
 
     cd ~/environments/cityindex/test   
