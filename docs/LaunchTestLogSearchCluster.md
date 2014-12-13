@@ -33,9 +33,9 @@ This provides a quick and cheap way to simluate running a LogSearch cluster
 
         Task 1 done
 
-        Started    	2014-12-11 14:49:19 UTC
-        Finished	2014-12-11 14:53:25 UTC
-        Duration	00:04:06
+        Started        2014-12-11 14:49:19 UTC
+        Finished  2014-12-11 14:53:25 UTC
+        Duration  00:04:06
 
         Stemcell uploaded and created.
         
@@ -89,9 +89,9 @@ This provides a quick and cheap way to simluate running a LogSearch cluster
         
         Task 2 done
         
-        Started    	2014-12-11 14:57:45 UTC
-        Finished	2014-12-11 14:59:56 UTC
-        Duration	00:02:11
+        Started     2014-12-11 14:57:45 UTC
+        Finished  2014-12-11 14:59:56 UTC
+        Duration  00:02:11
         
         Release uploaded        
 
@@ -181,20 +181,59 @@ This provides a quick and cheap way to simluate running a LogSearch cluster
         
         Task 3 done
         
-        Started		2014-12-11 15:55:39 UTC
-        Finished	2014-12-11 16:00:09 UTC
-        Duration	00:04:30
+        Started   2014-12-11 15:55:39 UTC
+        Finished  2014-12-11 16:00:09 UTC
+        Duration  00:04:30
         
         Deployed `manifest.yml' to `Bosh Lite Director'
 
+0.  Mappings
+    * Run `bosh vms` to see the IPs assigned to each VM in the deployment:
+
+            Deployment `vagrant-logsearch'
+            
+            Director task 27
+            
+            Task 27 done
+            
+            +---------------------+---------+---------------+---------------+
+            | Job/index           | State   | Resource Pool | IPs           |
+            +---------------------+---------+---------------+---------------+
+            | api/0               | running | warden        | 10.244.10.2   |
+            | elasticsearch_az1/0 | running | warden        | 10.244.10.122 |
+            | elasticsearch_az2/0 | running | warden        | 10.244.10.126 |
+            | ingestor/0          | running | warden        | 10.244.10.6   |
+            | log_parser/0        | running | warden        | 10.244.10.118 |
+            | queue/0             | running | warden        | 10.244.10.10  |
+            +---------------------+---------+---------------+---------------+
+           
+            VMs total: 6
+    
+    * From inside the Workspace you can access these IPs directly, eg: `curl 10.244.10.2`
+
+            {
+              "status" : 200,
+              "name" : "api/0",
+              "version" : {
+                "number" : "1.2.1",
+                "build_hash" : "6c95b759f9e7ef0f8e17f77d850da43ce8a4b364",
+                "build_timestamp" : "2014-06-03T15:02:52Z",
+                "build_snapshot" : false,
+                "lucene_version" : "4.8"
+              },
+              "tagline" : "You Know, for Search"
+             }
+
+    * Port mappings have been set up between the Workspace's external IP and these internal IPs.  You can see what these are using `cat ~/port_mappings.txt` :
+    
+            Port Mappings:
+              192.168.50.4:10080 -> 10.244.10.2:80
+              192.168.50.4:10443 -> 10.244.10.6:443
+     
+      Thus, from outside the Workspace (eg, in your browser), the same curl request can be made using `192.168.50.4:10080`
+      
 0.  Ship in data
       * @todo - point to scripts that inject some test data
 
-0.  API
-      * From inside the workspace, run `bosh vms` to see the IP address of the `api/0` node.
-          * You can send HTTP requests to this JSON API, eg: `curl http://10.244.0.2:80`
-      * A number of external ports have been mapped to the internal IPs - `cat ~/port_mappings.txt` to see which these are.
-          * You can send HTTP request to this JSON API from outside the workspace, eg: `curl http://10.244.0.2:80`    
-
-0.  Browse to kibana
-      * @todo - Kibana should be exposed on localhost:on where is kibana?
+0.  Browse to Kibana
+      * Kibana is installed on the API node.  You can access it via a browser external to the Workspace using `http://$workspace_external_ip:$port/_plugin/kibana`, eg `http://192.168.50.4:10080/_plugin/kibana`

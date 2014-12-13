@@ -24,8 +24,8 @@ opts = OptionParser.new do |opts|
     options[:local_ip] = local_ip
   end
 
-  opts.on("--workspace-tenant-number NUMBER", "Used to segregate internal container IPs & port mappings. Valid values: [0 - 9]") do |tenant_number|
-    options[:tenant_number] = tenant_number
+  opts.on("--workspace-tenant-number NUMBER", "Used to segregate internal container IPs & port mappings. Valid values: [0 - 200]") do |tenant_number|
+    options[:tenant_number] = tenant_number.to_i
   end
 
 end
@@ -48,7 +48,7 @@ end
 
 `echo "#{options[:public_key]}" >> #{options[:home_dir]}/.ssh/authorized_keys`
 
-`chown -R #{options[:username]}:#{options[:username]} #{options[:home_dir]}`
+`chown -R #{options[:username]}:#{options[:username]} #{options[:home_dir]} 2>&1 > /dev/null`
 
 def expose_container(local_ip, local_port, container_ip, container_port, options) 
   rule = "PREROUTING -p tcp -d #{local_ip} --dport #{local_port} -j DNAT --to #{container_ip}:#{container_port}"
@@ -63,10 +63,8 @@ def expose_container(local_ip, local_port, container_ip, container_port, options
 end
 
 `echo 'Port Mappings:' > #{options[:home_dir]}/port_mappings.txt`
-expose_container options[:local_ip], "1#{options[:tenant_number]}080",  "10.244.#{options[:tenant_number]}.2", 80, options
-expose_container options[:local_ip], "1#{options[:tenant_number]}443", "10.244.#{options[:tenant_number]}.14", 443, options
-expose_container options[:local_ip], "1#{options[:tenant_number]}514", "10.244.#{options[:tenant_number]}.14", 5514, options
-expose_container options[:local_ip], "1#{options[:tenant_number]}515", "10.244.#{options[:tenant_number]}.14", 5515, options
+expose_container options[:local_ip], "#{10+options[:tenant_number]}080",  "10.244.#{10+options[:tenant_number]}.2", 80, options
+expose_container options[:local_ip], "#{10+options[:tenant_number]}443", "10.244.#{10+options[:tenant_number]}.6", 443, options
 
 `echo 'export LOCAL_IP="#{options[:local_ip]}"' >> #{options[:home_dir]}/.bash_profile`
 `echo 'export TENANT_NUMBER=#{options[:tenant_number]}' >> #{options[:home_dir]}/.bash_profile`

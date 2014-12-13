@@ -1,7 +1,7 @@
 <%
 director_uuid = `bosh status | grep UUID | awk '{print $2}'` 
 deployment_name = "#{ENV['USER']}-logsearch"
-tenant_number = ENV.fetch("TENANT_NUMBER", 0).to_i
+ip_block = 10 + ENV.fetch("TENANT_NUMBER", 0).to_i
 %>
 
 ---
@@ -13,8 +13,8 @@ releases:
   version: latest
 
 compilation:
-  workers: 2
-  network: az1
+  workers: 3
+  network: warden
   reuse_compilation_vms: true
   cloud_properties: {}
 
@@ -23,12 +23,12 @@ update:
   canaries: 1
   canary_watch_time: 30000
   update_watch_time: 30000
-  max_in_flight: 1
+  max_in_flight: 2
   max_errors: 1
 
 resource_pools:
 - name: warden
-  network: az1
+  network: warden
   size: 6
   stemcell:
     name: bosh-warden-boshlite-ubuntu-trusty-go_agent
@@ -47,9 +47,9 @@ jobs:
   instances: 1
   resource_pool: warden
   networks:
-  - name: az1
+  - name: warden
     static_ips:
-    - 10.244.<%=tenant_number%>.2
+    - 10.244.<%=ip_block%>.2
   properties:
     collectd:
       python_elasticsearch:
@@ -70,15 +70,13 @@ jobs:
   release: logsearch
   templates:
   - name: collectd
-  - name: ingestor_lumberjack
   - name: ingestor_syslog
-  - name: ingestor_relp
   instances: 1
   resource_pool: warden
   networks:
-  - name: az1
+  - name: warden
     static_ips:
-    - 10.244.<%=tenant_number%>.14
+    - 10.244.<%=ip_block%>.6
 
 - name: queue
   release: logsearch
@@ -88,9 +86,9 @@ jobs:
   instances: 1
   resource_pool: warden
   networks:
-  - name: az1
+  - name: warden
     static_ips:
-    - 10.244.<%=tenant_number%>.10
+    - 10.244.<%=ip_block%>.10
   properties:
     collectd:
       python_redis:
@@ -104,10 +102,7 @@ jobs:
   instances: 1
   resource_pool: warden
   networks:
-  - name: az1
-    default:
-    - dns
-    - gateway
+  - name: warden
 
 - name: elasticsearch_az1
   release: logsearch
@@ -119,9 +114,7 @@ jobs:
   instances: 1
   resource_pool: warden
   networks:
-  - name: az1
-    static_ips:
-    - 10.244.<%=tenant_number%>.6
+  - name: warden
   persistent_disk: 1024
   properties:
     collectd:
@@ -141,10 +134,8 @@ jobs:
   instances: 1
   resource_pool: warden
   networks:
-  - name: az1
-    default:
-    - dns
-    - gateway
+  - name: warden
+  persistent_disk: 1024
   properties:
     collectd:
       python_elasticsearch:
@@ -153,47 +144,16 @@ jobs:
       node:
         allow_master: false
 
-# upload your backfill data
-# $ sshpass -pc1oudc0w scp -i "$HOME/.ssh/vagrant" 2014102721.20141027220003-api-0.log.xz vcap@10.244.<%=tenant_number%>.26:/tmp/backfill.xz
-# restart ingestion of it all
-# $ sshpass -pc1oudc0w ssh -i "$HOME/.ssh/vagrant" vcap@10.244.<%=tenant_number%>.26 "echo c1oudc0w | sudo -p '' -S /var/vcap/jobs/ingestor_archiver/bin/reload /tmp/backfill.xz"
-# utility if you want to block until complete
-# $ sshpass -pc1oudc0w ssh -i "$HOME/.ssh/vagrant" vcap@10.244.<%=tenant_number%>.26 "echo c1oudc0w | sudo -p '' -S /var/vcap/jobs/ingestor_archiver/bin/wait-until-loaded"
-#- name: restorer
-#  release: logsearch
-#  templates:
-#  - name: ingestor_archiver
-#  - name: log_parser
-#  instances: 1
-#  resource_pool: warden
-#  networks:
-#  - name: default
-#    default:
-#    - dns
-#    - gateway
-#  properties:
-#    redis:
-#      key: "logstash-restorer"
-
 properties: 
-  collectd:
-    hostname_prefix: "dev.logsearch.repo-test1."
-    python_librato:
-      #enabled: true
-      include_regex: "collectd\\.cpu\\..*,collectd\\.df\\..*,collectd\\.disk\\..*,collectd\\.elasticsearch\\..*,collectd\\.entropy\\..*,collectd\\.interface\\..*,collectd\\.load\\..*,collectd\\.memory\\..*,collectd\\.processes\\..*,collectd\\.redis_.*,collectd\\.users\\..*"
-      #email: nobody@example.com
-      #api_token: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
   elasticsearch:
-    host: 10.244.<%=tenant_number%>.2
-    cluster_name: logsearch--bosh-lite
+    host: 10.244.<%=ip_block%>.2
+    cluster_name: <%= deployment_name %>
     drain: true
-    indices:
-      ttl_interval: "5m"  # We want documents from test runs to be cleaned up frequently
     exec:
       environment:
         ES_HEAP_SIZE: 256M
   redis:
-    host: 10.244.<%=tenant_number%>.10
+    host: 10.244.<%=ip_block%>.10
   logstash_parser:
     debug: true
 <% filtersconf = File.join(File.dirname(File.expand_path(__FILE__)), 'examples/filters.conf') %>
@@ -203,48 +163,9 @@ properties:
 <% end %>
   logstash_ingestor:
     debug: true
-    relp:
-      port: 5515
-    syslog:
-      port: 5514
     syslog_tls:
       port: 443
       ssl_cert: |
-          -----BEGIN CERTIFICATE-----
-          MIICsDCCAhmgAwIBAgIJAJZZlYOII804MA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV
-          BAYTAkFVMRMwEQYDVQQIEwpTb21lLVN0YXRlMSEwHwYDVQQKExhJbnRlcm5ldCBX
-          aWRnaXRzIFB0eSBMdGQwHhcNMTQwNDA4MTUxNzA3WhcNMjQwNDA1MTUxNzA3WjBF
-          MQswCQYDVQQGEwJBVTETMBEGA1UECBMKU29tZS1TdGF0ZTEhMB8GA1UEChMYSW50
-          ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB
-          gQC2xI0wD26YOIEukuyokWDkKsFEvZxnadOEGT/9isf/mdiMk10NRZTF5bZU9ek9
-          Vj9HsO7sk2ays31bkjQVAw9/l2eQSDNKtnnWk28AiTEOvZq5ZYnc9PT5uyHQL4Uj
-          XJe2H8Dg/gfJhy9Ru9gpSSnRkYOXnwp2v6eJiQtzC6EG0QIDAQABo4GnMIGkMB0G
-          A1UdDgQWBBSyMMgqdi6u092zAgm03c0/JhP0bDB1BgNVHSMEbjBsgBSyMMgqdi6u
-          092zAgm03c0/JhP0bKFJpEcwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgTClNvbWUt
-          U3RhdGUxITAfBgNVBAoTGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZIIJAJZZlYOI
-          I804MAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAif7W/VbSZ9GHfNDP
-          Cf+dsFTBk/1MpPW0cHXCX2lza42kbZ29PmhW1DSD+LkDcodL5wdVvTKSvJKmi5Cz
-          Y4O5DFyRcLQVTrhlUWfnUxTmaeWWzWyZe4RI98tTc2QHli6S9aeqczpa8k1aTiDp
-          XDPsPhpJjIepHXFRDaXUoV/T984=
-          -----END CERTIFICATE-----
-      ssl_key: |
-          -----BEGIN RSA PRIVATE KEY-----
-          MIICWwIBAAKBgQC2xI0wD26YOIEukuyokWDkKsFEvZxnadOEGT/9isf/mdiMk10N
-          RZTF5bZU9ek9Vj9HsO7sk2ays31bkjQVAw9/l2eQSDNKtnnWk28AiTEOvZq5ZYnc
-          9PT5uyHQL4UjXJe2H8Dg/gfJhy9Ru9gpSSnRkYOXnwp2v6eJiQtzC6EG0QIDAQAB
-          AoGASnrQmnw/cnLcWfFv1cXguTqfJfcrDI14r8VmaVkr5YJ5V9gZvHXVicvxwK+x
-          y9gg04NL6karPDme5TkwVju4DXJxwcT70QhFOG5EHFxij1HA8hgOU+K4X4FeNVbz
-          JPi27ktnJTsYs2Hq/UMoWygTvlTtyCsCytcAuo5jZRoy/cECQQDxoeFJiIH6hn2M
-          G/89USPeJKfiXIP8pSZCZi/FagVHRYKhgJ2MY4Uw4bmIxyiMO9VGSXhDpbnx1AAp
-          /6/KOod5AkEAwaKjDcI4c87DRQfPdORNBoKPTY1CuLgYUTIKBDUYUG0d/Vwy+USA
-          0NJI74B6sLCdfxLtK1d95XVuLRPDDGksGQJAMm0zI/JuFcdtegj5umUtlBWYR8BA
-          9z/L/T1wKMXYdihGe8fomTzHtgzVeHr/tkxiVPnONGfop1Qz+I/Yst6GGQJANAJ+
-          L1zikuCPfIQrieckdUIuQZNWv4zbIzwAir7EKB4W9w2Dt4ZZ3z0MUCA/VCQsOYyY
-          3ZJjg3V2QW9UbYn2SQJAMwhKLGhbuv5ge5K5H436Rl0NR2nZVaIgxez0Y8tVeTBT
-          rM8ETzoKmuLdiTl3uUhgJMtdOP8w7geYl8o1YP+3YQ==
-          -----END RSA PRIVATE KEY-----
-    lumberjack:
-      ssl_certificate: |
           -----BEGIN CERTIFICATE-----
           MIICsDCCAhmgAwIBAgIJAJZZlYOII804MA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV
           BAYTAkFVMRMwEQYDVQQIEwpTb21lLVN0YXRlMSEwHwYDVQQKExhJbnRlcm5ldCBX
@@ -288,30 +209,21 @@ apply_spec:
       - 3.europe.pool.ntp.org
 
 networks:
-- name: az1
+- name: warden
   subnets:
-  - cloud_properties:
-      name: random
-    range: 10.244.<%=tenant_number%>.0/27
+<% (0..28).each_with_index do |i| %>
+  - range: 10.244.<%=ip_block%>.<%= i*4 %>/30
+    reserved:
+      - 10.244.<%=ip_block%>.<%= i*4 + 1 %>
     static:
-    - 10.244.<%=tenant_number%>.1
-    - 10.244.<%=tenant_number%>.2
-    - 10.244.<%=tenant_number%>.3
-    - 10.244.<%=tenant_number%>.4
-    - 10.244.<%=tenant_number%>.5
-    - 10.244.<%=tenant_number%>.6
-    - 10.244.<%=tenant_number%>.7
-- name: az2
-  subnets:
-  - cloud_properties:
+      - 10.244.<%=ip_block%>.<%= i*4 + 2 %>
+    cloud_properties:
       name: random
-    range: 10.244.<%=tenant_number%>.32/27
-    static:
-    - 10.244.<%=tenant_number%>.33
-    - 10.244.<%=tenant_number%>.34
-    - 10.244.<%=tenant_number%>.35
-    - 10.244.<%=tenant_number%>.36
-    - 10.244.<%=tenant_number%>.37
-    - 10.244.<%=tenant_number%>.38
-    - 10.244.<%=tenant_number%>.39
-    - 10.244.<%=tenant_number%>.40
+<% end %>
+<% (29..61).each_with_index do |i| %>
+  - range: 10.244.<%=ip_block%>.<%= i*4 %>/30
+    reserved:
+      - 10.244.<%=ip_block%>.<%= i*4 + 1 %>
+    cloud_properties:
+      name: random
+<% end %>

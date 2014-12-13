@@ -21,7 +21,9 @@ To setup the LogSearch Workspace VM you need:
     * SSH in and become `root`
     
             cd /root/logsearch-workspace
-            WORKSPACE_USERNAME=janesmith WORKSPACE_PUBLIC_KEY='ssh-rsa xxxx' WORKSPACE_HOMEDIRS=/workspaces _setup/runtime/add_new_workspace
+            _setup/runtime/add_new_workspace --workspace-username=janesmith --workspace-public-key='ssh-rsa xxxx' --workspace-homedirs=/workspaces --workspace-tenant-number 1 --workspace-local-ip=192.168.50.4
+
+        * NB! `--workspace-tenant-number` must be a unique number between 0 - 200
 
     * The user (ie, `janesmith`) should now be able to SSH into their new workspace using 
     
