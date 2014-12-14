@@ -2,9 +2,6 @@
 
 PORT="1${TENANT_NUMBER}000"
 
-#
-# system: cloud9 IDE
-#
 if [ ! -d ~/bin/cloud9-editor ] ; then
   echo "Installing Cloud9 IDE..."
   mkdir -p ~/bin/cloud9-editor
