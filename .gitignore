@@ -34,6 +34,4 @@ build/
 .rvmrc
 
 .vagrant/
-.env
-!.env-sample
-remote_workspace_mirror/
+workspace/

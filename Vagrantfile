@@ -7,9 +7,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #Ubuntu 14.04 VM with BOSH lite installed
   config.vm.box = 'cloudfoundry/bosh-lite'
   config.vm.box_version = '388'
+  config.vm.hostname = 'logsearch-workspace'
 
   config.vm.provider :virtualbox do |v, override| 
     override.vm.network "private_network", ip: "192.168.50.4"
+      #Enable NFS folder sharing if on Mac
+      if RUBY_PLATFORM =~ /.*darwin.*/ 
+        `mkdir -p workspace/environments`
+        `mkdir -p workspace/src`
+        override.vm.synced_folder "workspace/environments", "/home/vagrant/environments", type: "nfs"
+        override.vm.synced_folder "workspace/src", "/home/vagrant/src", type: "nfs"
+      end
   end
 
   config.vm.provision "shell", run: "always", inline: <<EOF 
