@@ -12,7 +12,7 @@ git clone --recursive git@github.com:logsearch/logsearch-boshrelease.git $WORKSP
 
 echo "Fetching logsearch documentation"
 echo "--------------------------------"
-git clone git@github.com:logsearch/docs.git $WORKSPACE_DIR/src/docs
+git clone --recursive git@github.com:logsearch/docs.git $WORKSPACE_DIR/src/docs
 
 echo "Fetching logsearch-website"
 echo "--------------------------"
