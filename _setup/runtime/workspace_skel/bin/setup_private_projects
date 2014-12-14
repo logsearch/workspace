@@ -3,27 +3,6 @@ SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 WORKSPACE_DIR=$( cd "$SCRIPT_DIR" && cd .. && pwd )
 
 echo "################################"
-echo "Fetching public repos"
-echo "################################"
-
-echo "Fetching logsearch-boshrelease"
-echo "------------------------------"
-git clone --recursive git@github.com:logsearch/logsearch-boshrelease.git $WORKSPACE_DIR/src/logsearch-boshrelease
-
-echo "Fetching logsearch documentation"
-echo "--------------------------------"
-git clone git@github.com:logsearch/docs.git $WORKSPACE_DIR/src/docs
-
-echo "Fetching logsearch-website"
-echo "--------------------------"
-git clone git@github.com:logsearch/logsearch-website.git $WORKSPACE_DIR/src/logsearch-website
-
-echo "Fetching kibana4"
-echo "-----------------"
-git clone --recursive git@github.com:elasticsearch/kibana.git $WORKSPACE_DIR/src/kibana
-git clone --recursive git@github.com:logsearch/kibana-status-diagram-plugin.git $WORKSPACE_DIR/src/kibana-status-diagram-plugin
-
-echo "################################"
 echo "Fetching private repos"
 echo "################################"
 
@@ -44,6 +23,9 @@ git ls-remote "git@github.com:cityindex/logsearch-filters-internal.git" > /dev/n
 if [ "$?" -ne 0 ]; then
     echo "WARNING: Unable to read from 'git@github.com:cityindex/logsearch-filters-internal.git'"
 else
-   git clone --recursive git@github.com:cityindex/logsearch-filters-internal.git $WORKSPACE_DIR/src/logsearch-filters-internal
+  git clone --recursive git@github.com:cityindex/logsearch-filters-internal.git $WORKSPACE_DIR/src/logsearch-filters-internal
+  (
+    cd $WORKSPACE_DIR/src/logsearch-filters-internal
+    bin/install_deps.sh 
+  )
 fi
-
