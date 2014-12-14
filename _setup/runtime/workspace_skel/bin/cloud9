@@ -7,8 +7,10 @@ PORT="1${TENANT_NUMBER}000"
 #
 if [ ! -d ~/bin/cloud9-editor ] ; then
   echo "Installing Cloud9 IDE..."
+  mkdir -p ~/bin/cloud9-editor
+  curl -sL https://github.com/ajaxorg/cloud9/tarball/master \
+  	| tar zxv -C ~/bin/cloud9-editor --strip 1 
 
-  git clone https://github.com/ajaxorg/cloud9.git ~/bin/cloud9-editor
   (
     cd ~/bin/cloud9-editor
     npm install
