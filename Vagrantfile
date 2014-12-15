@@ -21,8 +21,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision "shell", run: "always", inline: <<EOF 
-    echo "export AWS_SECRET_ACCESS_KEY=#{ENV['AWS_SECRET_ACCESS_KEY']}
-export AWS_ACCESS_KEY_ID=#{ENV['AWS_ACCESS_KEY_ID']}
+    echo "export AWS_ACCESS_KEY_ID=#{ENV['AWS_ACCESS_KEY_ID']}
+export AWS_SECRET_ACCESS_KEY=#{ENV['AWS_SECRET_ACCESS_KEY']}
 export GIT_AUTHOR_EMAIL='#{`git config --global user.email`.chomp}'
 export GIT_AUTHOR_NAME='#{`git config --global user.name`.chomp}'" > /home/vagrant/.env
 EOF
