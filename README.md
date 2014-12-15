@@ -1,26 +1,51 @@
-# LogSearch Operations
+# LogSearch WorkSpace
 
 ## Purpose
+To provide a workspace containing all the configuration, source code and dependancies for for operating and developing a LogSearch cluster.  
 
-This repository contains configuration, code and documentation for developing and running LogSearch clusters
+Using this workspace you can easily:
 
-## Requirements
+* Launch a test LogSearch cluster (in a local Vagrant VM or a remote EC2 VM)
+* Deploy and administer a production multi-VM LogSearch cluster - using configuration as code
+* Develop and customise the LogSearch components and make your own LogSearch release
 
-* Vagrant 1.6.5+
-* VirtualBox 4.3.18+
+## Getting started
 
-## Setup
+### Single user local Vagrant VM
 
-* Rename the sample `.bosh_config.default` files to `.bosh_config` using `find . -name .bosh_config.default | sed -e "p;s/.default//" | xargs -n2 cp`
-* `bin/launch_local_runtime-environments` - takes about 10 min to spin up a boot2docker VM and initialise some docker containers
+0. You need to have installed:
+    * Git 1.8+
+    * Vagrant 1.6.5+
+    * VirtualBox 4.3.18+
+    * A SSH client
+0. Launch a Vagrant VM (This downloads about ~2GB of data)
 
-## Working with BOSH
-* Connect to the environment's VPN (eg, vpn.meta.logsearch.io or vpn.cityindex.logsearch.io)
-* `bin/connect_bosh-cli_runtime-environment` - SSH's into the [bosh-cli] runtime environment container
-* `cd` into the environment, eg `cd meta` - this targets that environment's BOSH director
-* Login to the director `bosh login` (should only have to do this once)
-* Run BOSH commands; eg `bosh -d logsearch/deploy_manifest.yml ssh` or `bosh vms --vitals`
+        git clone https://github.com/logsearch/workspace ~/logsearch-workspace
+        cd ~/logsearch-workspace
+        vagrant up
+          
+0. SSH into your workspace
+    * Using the default SSH client on Mac: `vagrant ssh`
+    * Using a customised SSH client (eg, Kitty for Windows), you can get the SSH settings using `vagrant ssh-config`
+
+0. Perform one of the common LogSearch Workspace tasks, eg:
+    * [Launch your own test LogSearch cluster](docs/LaunchTestLogSearchCluster.md)
+    * [Administer an existing LogSearch cluster](docs/AdministerLogSearchCluster.md)
+    * [Develop & deploy a new Log Parsing filter](docs/DevelopAndDeployALogParsingFilter.md)
+
+#### Multi-user VM on EC2
+
+You can run multiple LogSearch Workspaces on a single VM (running inside your datacentre).  
+
+This simplifies setup & maintenance of the LogSearch Workspace for team members, especially if they use Windows or have poor internet connections
+
+This VM is also a good location to host your Continuous Integration build agents, or Chatbots that need to interact with your LogSearch infrastructure.
+
+See [How to setup a Multi-User LogSearch Workspace](docs/SetupMultiUserLogSearchWorkspace.md) for details.
 
 ## Further documentation
 
-Please see README.md files inside each subfolder for more specific details
+See the [Documentation](docs/README.md) for more examples of things you can do with the LogSearch Workspace
+## Copyright and License
+
+Copyright 2014 City Index Ltd.  Licensed under [Apache License 2.0](./LICENSE)

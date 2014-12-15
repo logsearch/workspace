@@ -34,5 +34,4 @@ build/
 .rvmrc
 
 .vagrant/
-.env
-!.env-sample
+workspace/

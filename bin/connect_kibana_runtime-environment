@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-vagrant ssh -c "sh /workspace/shared/runtime-environments/kibana/run_shell"

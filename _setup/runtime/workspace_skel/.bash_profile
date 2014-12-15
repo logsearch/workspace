@@ -138,10 +138,45 @@ prompt() {
     exit_status="${RED}▸${COLOREND} "
   fi
 
-  PS1="[bosh-cli] $(working_directory)$(parse_git_branch)$(parse_remote_state)$exit_status"
+  PS1="[logsearch workspace] $(working_directory)$(parse_git_branch)$(parse_remote_state)$exit_status"
 }
 
+#Ensure SSH private key exists
+if [ ! -f ~/.ssh/id_rsa ]; then
+  echo "Generating local SSH key"
+  ssh-keygen -f ~/.ssh/id_rsa -t rsa -N '' > /dev/null
+fi
+
+#Set up the interactive prompt
 PROMPT_COMMAND=prompt
 
 #Configure environment variables
-source /workspace/.env
+warn_if_env_missing() {
+ eval ENV_VALUE=\$$1
+ if [ "$ENV_VALUE" == "" ]; then
+   echo -e "\x1B[01;33m WARNING: Environment var: $1 is not set.  You won't be able to $2. \x1B[0m"
+ fi
+}
+#Configure environment variables
+export BOSH_CONFIG=.bosh_config
+if [ -f ~/.env ]; then
+ echo "Loading ENV variables from ~/.env"
+ source ~/.env
+fi
+
+#Validate that the required values are set
+warn_if_env_missing AWS_ACCESS_KEY_ID "interact with your AWS account"
+warn_if_env_missing AWS_SECRET_ACCESS_KEY "interact with your AWS account"
+warn_if_env_missing GIT_AUTHOR_NAME "commit changes to Git"
+warn_if_env_missing GIT_AUTHOR_EMAIL "commit changes to Git"
+export GIT_COMMITTER_NAME="${GIT_COMMITTER_NAME:-"$GIT_AUTHOR_NAME"}"
+export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-"$GIT_AUTHOR_EMAIL"}"
+
+#Turn on the credential helper so that Git will save your credentials in memory 1 hour.
+git config --global credential.helper 'cache --timeout=3600'
+
+#Enable command completions
+complete -C '/usr/local/bin/aws_completer' aws
+
+#Output port mappings that have been setup
+cat ~/port_mappings.txt

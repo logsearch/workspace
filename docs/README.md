@@ -1,7 +1,13 @@
-# LogSearch Documentation
+# Using the LogSearch Workspace
 
-Documentation for the LogSearch project is split by user role:
-
-* [User documentation](user/) - for those who want to learn how to use an existing LogSearch installation
-* [Operator documentation](developer/) - for those who want to deploy and operatate a LogSearch installation
-* [Developer documentation](operator/) - for those who want to customise and extend LogSearch
+* [Launch a test LogSearch cluster](LaunchTestLogSearchCluster.md)
+* Operating a LogSearch cluster
+  * [Administer an existing LogSearch cluster](AdministerLogSearchCluster.md)
+  * [Setting Workspace Environment Variables](SettingWorkspaceEnvironmentVariables.md)
+* Developing & extending a LogSearch cluster
+  * [Editing files in the Workspace](EditingFilesInTheWorkspace.md)
+  * [Developing a LogSearch filter](DevelopALogSearchFilter.md)
+  * [Developing the www.logsearch.io website](DevelopTheLogSearchWebsite.md)
+  * [Developing a LogSearch BOSH release](DevelopLogSearchBOSHRelease.md)
+* Advanced
+  * [How to setup a Multi-User LogSearch Workspace](SetupMultiUserLogSearchWorkspace.md)

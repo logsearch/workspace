@@ -1,0 +1,197 @@
+#!/bin/bash
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+#set -x
+set -e
+
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
+#
+# system: docker
+#
+if ! (which docker 1>/dev/null 2>&1) ; then
+  echo "Installing docker..."
+
+  wget -qO- https://get.docker.com/ubuntu/ | sh
+fi
+echo "docker: $(docker --version 2>&1)" | head -n 1
+
+
+#Fix
+if [ "`tail -1 /root/.profile`" = "mesg n" ]; then
+  echo 'Patching basebox to prevent future `stdin: is not a tty` errors...'
+  sed -i '$d' /root/.profile
+  cat << 'EOH' >> /root/.profile
+  if `tty -s`; then
+    mesg n
+  fi
+EOH
+fi
+
+#
+# system: curl
+#
+if [ ! -f /usr/bin/curl ]; then
+  echo "Installing curl"
+  apt-get install curl -y
+fi
+echo "curl: $(curl --version)" | head -n 1
+
+#
+# system: git
+#
+if [ ! -f /usr/bin/git ]; then
+  echo "Installing git"
+  apt-get install git-core -y
+fi
+echo "git: $(git --version)"
+
+#
+# system: hg
+#
+if ! (which hg 1>/dev/null 2>&1) ; then
+  echo "Installing Mecurial"
+  apt-get install mercurial -y
+fi
+echo "hg: $(hg --version)"
+
+#
+# system: java
+#
+if ! (which java 1>/dev/null 2>&1) ; then
+  echo "Installing java..."
+
+  apt-get install -y openjdk-7-jre-headless
+fi
+echo "java: $(java -version 2>&1 | awk -F '\\"' '/version/ { print $2 }')"
+
+#
+# system: node & npm
+#
+if ! (which nodejs 1>/dev/null 2>&1) ; then
+  echo "Installing NodeJs & NPM ..."
+
+  apt-get install -y nodejs npm
+  ln -s /usr/bin/nodejs /usr/bin/node
+fi
+echo "nodejs: $(nodejs -v)" | head -n 1
+
+#
+# system: grunt-cli
+#
+if ! (which grunt 1>/dev/null 2>&1) ; then
+  echo "Installing Grunt cli ..."
+
+  npm install -g grunt-cli
+fi
+echo "grunt: $(grunt --version)" | head -n 1
+
+#
+# system: bower
+#
+if ! (which bower 1>/dev/null 2>&1) ; then
+  echo "Installing Grunt cli ..."
+
+  npm install -g bower
+fi
+echo "bower: $( bower --version)" | head -n 1
+
+#
+# util: vim
+#
+if ! (which vim 1>/dev/null 2>&1) ; then
+  echo "Installing vim..."
+
+  apt-get install -y vim
+fi
+echo "vim: $(vim --version)" | head -n 1
+
+#
+# util: tig
+#
+if ! (which tig 1>/dev/null 2>&1) ; then
+  echo "Installing tig..."
+
+  apt-get install -y tig
+fi
+echo "tig: $(tig --version)" | head -n 1
+
+
+#
+# util: floomatic
+#
+if ! (which floomatic 1>/dev/null 2>&1) ; then
+  echo "Installing floomatic..."
+
+  apt-get install -y libqt4-dev
+  npm install -g floomatic
+fi
+echo "floomatic: installed" # printing the actual version number currently throws an ugly warning: $(floomatic --version)" | head -n 1
+
+#
+# util: jq
+#
+if ! (which jq 1>/dev/null 2>&1) ; then
+  echo "Installing aws cli..."
+
+  apt-get install jq -y
+fi
+echo "jq: $(jq --version 2>&1)" | head -n 1
+
+#
+# util: htop
+#
+if ! (which htop 1>/dev/null 2>&1) ; then
+  echo "Installing htop..."
+
+  apt-get install htop -y
+fi
+echo "htop: $(htop --version 2>&1)" | head -n 1
+
+#
+# util: tree
+#
+if ! (which tree 1>/dev/null 2>&1) ; then
+  echo "Installing tree..."
+
+  apt-get install tree -y
+fi
+echo "tree: $(tree --version 2>&1)" | head -n 1
+
+#
+# system: awscli
+#
+if ! (which aws 1>/dev/null 2>&1) ; then
+  echo "Installing aws cli..."
+
+  apt-get install -y python-pip
+  pip install --upgrade awscli httpie
+  bash -c "complete -C '/usr/local/bin/aws_completer' aws"
+fi
+echo "awscli: $(aws --version 2>&1)" | head -n 1
+echo "python: $(python --version 2>&1)" | head -n 1
+
+# Ensure all users have access to /tmp
+chmod 777 /tmp
+
+# Display "help" at login
+cp $SCRIPT_DIR/motd /etc/motd
+
+# Allow forwarding of all ENV variables via SSH
+sed -i 's/AcceptEnv\ LANG/AcceptEnv\ \*\ LANG/g' /etc/ssh/sshd_config
+service ssh reload
+
+# Forward traffic to the warden containers
+if [ $(dpkg-query -W -f='${Status}' iptables-persistent 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+  echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
+  echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
+  apt-get install iptables-persistent -y
+fi
+
+echo "=-=-=-=-=-=-=-=-=-=-=-="
+echo "Provisioning completed!"
+echo "=-=-=-=-=-=-=-=-=-=-=-="
