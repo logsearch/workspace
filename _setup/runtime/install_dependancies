@@ -56,7 +56,7 @@ if ! (which hg 1>/dev/null 2>&1) ; then
   echo "Installing Mecurial"
   apt-get install mercurial -y
 fi
-echo "hg: $(hg --version)"
+echo "hg: $(hg --version)" | head -n 1
 
 #
 # system: java
@@ -98,6 +98,21 @@ if ! (which bower 1>/dev/null 2>&1) ; then
   npm install -g bower
 fi
 echo "bower: $( bower --version)" | head -n 1
+
+#
+# system: jekyll
+#
+if ! (which jekyll 1>/dev/null 2>&1) ; then
+  echo "Installing jekyll ..."
+
+  # jekyll needs to use ruby 2+ (or jekyll serve fails wih https://github.com/celluloid/celluloid/wiki/Fiber-stack-errors)
+  # so we install it for /var/vcap/packages/ruby (which is ruby 2.1) 
+  # rather than the system ruby (which is ruby 1.9) 
+
+  /var/vcap/packages/ruby/bin/gem install jekyll --no-rdoc --no-ri
+  ln -s /var/vcap/packages/ruby/bin/jekyll /usr/local/bin/jekyll 
+fi
+echo "jekyll: $(jekyll -version)" | head -n 1
 
 #
 # util: vim
@@ -192,6 +207,6 @@ then
   apt-get install iptables-persistent -y
 fi
 
-echo "=-=-=-=-=-=-=-=-=-=-=-="
-echo "Provisioning completed!"
-echo "=-=-=-=-=-=-=-=-=-=-=-="
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+echo "Dependancy provisioning completed!"
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="

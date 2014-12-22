@@ -69,3 +69,7 @@ expose_container options[:local_ip], "#{10+options[:tenant_number]}443", "10.244
 `echo 'export LOCAL_IP="#{options[:local_ip]}"' >> #{options[:home_dir]}/.bash_profile`
 `echo 'export TENANT_NUMBER=#{options[:tenant_number]}' >> #{options[:home_dir]}/.bash_profile`
 
+puts "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+puts "Workspace for #{options[:username]} created!"
+puts "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+
