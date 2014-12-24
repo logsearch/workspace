@@ -11,3 +11,4 @@
   * [Developing a LogSearch BOSH release](DevelopLogSearchBOSHRelease.md)
 * Advanced
   * [How to setup a Multi-User LogSearch Workspace](SetupMultiUserLogSearchWorkspace.md)
+  * [How to create a provisioned LogSearch Workspace Vagrant box](CreateLogSearchWorkspaceBox.md)
