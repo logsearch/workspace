@@ -18,7 +18,7 @@ Using this workspace you can easily:
     * Vagrant 1.6.5+
     * VirtualBox 4.3.18+
     * A SSH client
-0. Launch a Vagrant VM (This downloads about ~2GB of data)
+0. Launch a Vagrant VM (This downloads [a custom Vagrant box of approx 800MB in size from AWS S3](https://github.com/logsearch/workspace/blob/master/Vagrantfile#L12))
 
         git clone https://github.com/logsearch/workspace ~/logsearch-workspace
         cd ~/logsearch-workspace
