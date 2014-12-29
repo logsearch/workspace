@@ -177,6 +177,20 @@ fi
 echo "tree: $(tree --version 2>&1)" | head -n 1
 
 #
+# util: patch bosh_cli to add string diffing of changesets
+#
+if ! (gem list diff-lcs | grep diff-lcs 1>/dev/null 2>&1) ; then
+  echo "Patching bosh_cli to add string diffing of changesets"
+
+  gem install diff-lcs --no-ri --no-rdoc
+  (
+    cd /var/lib/gems/1.9.1/gems/bosh_cli-1.*
+    patch -p0 < $SCRIPT_DIR/patches/bosh_cli-string-diff.patch
+  )
+fi
+echo "bosh_cli: Patched to add string diffing of changesets"
+
+#
 # system: awscli
 #
 if ! (which aws 1>/dev/null 2>&1) ; then
