@@ -1,3 +1,7 @@
+---
+title: "Create LogSearch Workspace box"
+---
+
 To (manually) create a readily provisioned LogSearch Workspace Vagant box you need:
 
 0. You need to have installed:

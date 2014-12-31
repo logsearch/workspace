@@ -1,3 +1,7 @@
+---
+title: "Using the LogSearch Workspace"
+---
+
 # Using the LogSearch Workspace
 
 * [Launch a test LogSearch cluster](LaunchTestLogSearchCluster.md)

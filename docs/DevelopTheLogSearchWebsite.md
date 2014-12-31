@@ -1,4 +1,6 @@
-# Develop the LogSearch Website (www.logsearch.io)
+---
+title: "Develop the LogSearch Website (www.logsearch.io)"
+---
 
 0. Connect to your LogSearch Workspace shell
 0. Ensure you have setup the public src projects using `~/bin/setup_public_src_projects`

@@ -1,4 +1,8 @@
-To setup the LogSearch Workspace VM you need:
+---
+title: "Setup the LogSearch Workspace Server you need"
+---
+
+To setup the LogSearch Workspace Server you need:
 
 0. You need to have installed:
     * Git 1.8+

@@ -1,4 +1,6 @@
-# Launch a local test LogSearch cluster
+---
+title: "Launch a local test LogSearch cluster"
+---
 
 The LogSearch Workspace contains a copy of bosh-lite, which enables you to deploy a local LogSearch cluster using Linux Containers rather than actual VMs.
 

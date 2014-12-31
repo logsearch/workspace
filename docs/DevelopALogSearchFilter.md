@@ -1,4 +1,6 @@
-# Develop a LogSearch Filter
+---
+title: "Develop a LogSearch Filter"
+---
 
 > The instructions below demonstrate how to add a new LogStash filter to the public `logsearch/logsearch-filters-cf` repository.
 > You will probably want to create your own (private?) `logsearch-filters-$YOUR_CLUSTER`, and then work with it in a similar way.

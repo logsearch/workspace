@@ -1,4 +1,6 @@
-# Administer LogSearch Cluster
+---
+title: "Administer LogSearch Cluster"
+---
 
 Your LogSearch Workspace facilitates a "configuration as code" approach to managing "production" LogSearch clusters.
 

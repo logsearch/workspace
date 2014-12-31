@@ -1,4 +1,6 @@
-# Editing Files in the Workspace
+---
+title: "Editing Files in the Workspace"
+---
 
 There are several ways to edit files inside the Workspace.
 
