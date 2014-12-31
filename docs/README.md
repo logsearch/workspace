@@ -4,15 +4,15 @@ title: "Using the LogSearch Workspace"
 
 # Using the LogSearch Workspace
 
-* [Launch a test LogSearch cluster](LaunchTestLogSearchCluster.md)
+* [Launch a test LogSearch cluster](launch-test-logsearch-cluster.md)
 * Operating a LogSearch cluster
-  * [Administer an existing LogSearch cluster](AdministerLogSearchCluster.md)
-  * [Setting Workspace Environment Variables](SettingWorkspaceEnvironmentVariables.md)
+  * [Administer an existing LogSearch cluster](administer-logsearch-cluster.md)
+  * [Setting Workspace Environment Variables](setting-workspace-environment-variables.md)
 * Developing & extending a LogSearch cluster
-  * [Editing files in the Workspace](EditingFilesInTheWorkspace.md)
-  * [Developing a LogSearch filter](DevelopALogSearchFilter.md)
-  * [Developing the www.logsearch.io website](DevelopTheLogSearchWebsite.md)
-  * [Developing a LogSearch BOSH release](DevelopLogSearchBOSHRelease.md)
+  * [Editing files in the Workspace](editing-files-in-the-workspace.md)
+  * [Developing a LogSearch filter](develop-a-logsearch-filter.md)
+  * [Developing the www.logsearch.io website](develop-the-logsearch-website.md)
+  * [Developing a LogSearch BOSH release](develop-logsearch-BOSH-release.md)
 * Advanced
-  * [How to setup a Multi-User LogSearch Workspace](SetupMultiUserLogSearchWorkspace.md)
-  * [How to create a provisioned LogSearch Workspace Vagrant box](CreateLogSearchWorkspaceBox.md)
+  * [How to setup a Multi-User LogSearch Workspace](setup-multi-user-logsearch-workspace.md)
+  * [How to create a provisioned LogSearch Workspace Vagrant box](create-logsearch-workspace-box.md)
