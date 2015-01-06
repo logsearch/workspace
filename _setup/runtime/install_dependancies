@@ -19,6 +19,16 @@ if ! (which docker 1>/dev/null 2>&1) ; then
 fi
 echo "docker: $(docker --version 2>&1)" | head -n 1
 
+#
+# system: apparmor
+# Fixes: set apparmor profile docker-default: no such file or directory
+# http://stackoverflow.com/questions/23571900/docker-failing-to-load-apparmor-profile-upon-ubuntu-host-boot
+#
+if [ $(dpkg-query -W -f='${Status}' apparmor 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+  apt-get install apparmor -y
+fi
+echo "apparmor: installed"
 
 #Fix
 if [ "`tail -1 /root/.profile`" = "mesg n" ]; then
