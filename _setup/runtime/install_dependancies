@@ -60,6 +60,26 @@ fi
 echo "git: $(git --version)"
 
 #
+# system: bsdtar
+#
+if ! (which bsdtar 1>/dev/null 2>&1) ; then
+  echo "Installing bsdtar"
+  apt-get install bsdtar -y
+fi
+echo "bsdtar: $(bsdtar --version)"
+
+#
+# util: cloudfoundry spiff
+#
+if ! (which spiff 1>/dev/null 2>&1) ; then
+  echo "Installing spiff..."
+
+  curl -L https://github.com/cloudfoundry-incubator/spiff/releases/download/v1.0.3/spiff_linux_amd64.zip | sudo bsdtar -xvf- -C /usr/local/bin
+  sudo chmod +x /usr/local/bin/spiff
+fi
+echo "spiff: $(spiff --version)" | head -n 1
+
+#
 # system: hg
 #
 if ! (which hg 1>/dev/null 2>&1) ; then
