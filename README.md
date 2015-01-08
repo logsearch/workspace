@@ -5,9 +5,9 @@ To provide a workspace containing all the configuration, source code and dependa
 
 Using this workspace you can easily:
 
-* Launch a test LogSearch cluster (in a local Vagrant VM or a remote EC2 VM)
-* Deploy and administer a production multi-VM LogSearch cluster - using configuration as code
-* Develop and customise the LogSearch components and make your own LogSearch release
+* Launch a test Logsearch cluster (in a local Vagrant VM or a remote EC2 VM)
+* Deploy and administer a production multi-VM Logsearch cluster - using configuration as code
+* Develop and customise the Logsearch components and make your own Logsearch release
 
 ## Getting started
 
@@ -41,7 +41,7 @@ This simplifies setup & maintenance of the LogSearch Workspace for team members,
 
 This VM is also a good location to host your Continuous Integration build agents, or Chatbots that need to interact with your LogSearch infrastructure.
 
-See [How to setup a Multi-User LogSearch Workspace](docs/SetupMultiUserLogSearchWorkspace.md) for details.
+See [How to setup a Multi-User Logsearch Workspace](http://www.logsearch.io/docs/workspace/setup-multi-user-logsearch-workspace.html) for details.
 
 ## Further documentation
 
