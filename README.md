@@ -29,9 +29,9 @@ Using this workspace you can easily:
     * Using a customised SSH client (eg, Kitty for Windows), you can get the SSH settings using `vagrant ssh-config`
 
 0. Perform one of the common Logsearch Workspace tasks, eg:
-    * [Launch your own test Logsearch cluster](http://www.Logsearch.io/docs/boshrelease/getting-started/deploying-Logsearch.html)
-    * [Administer an existing Logsearch cluster](http://www.Logsearch.io/docs/workspace/administer-Logsearch-cluster.html)
-    * [Develop & deploy a new Log Parsing filter](http://www.Logsearch.io/docs/workspace/develop-a-Logsearch-filter.html)
+    * [Launch your own test Logsearch cluster](http://www.logsearch.io/docs/boshrelease/getting-started/deploying-logsearch.html)
+    * [Administer an existing Logsearch cluster](http://www.logsearch.io/docs/workspace/administer-logsearch-cluster.html)
+    * [Develop & deploy a new Log Parsing filter](http://www.logsearch.io/docs/workspace/develop-a-logsearch-filter.html)
 
 #### Multi-user VM on EC2
 
