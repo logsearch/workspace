@@ -17,4 +17,4 @@ fi
 echo "==================================================="
 echo "Launching Cloud9 IDE at http://$LOCAL_IP:$PORT"
 echo "==================================================="
-~/bin/cloud9-editor/bin/cloud9.sh -l 0.0.0.0 -w ~/ -p $PORT
+~/bin/cloud9-editor/bin/cloud9.sh -l $LOCAL_IP -w ~/ -p $PORT
