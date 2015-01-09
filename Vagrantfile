@@ -8,11 +8,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 #  config.vm.box = 'cloudfoundry/bosh-lite'
 #  config.vm.box_version = '388'
   #Provisioned LogSearch workspace (created from 'cloudfoundry/bosh-lite' via 'vagrant package', see above)
-  config.vm.box = 'logsearch-workspace'
-  config.vm.box_url = 'https://s3-eu-west-1.amazonaws.com/ci-logsearch/vagrant/boxes/logsearch-workspace-20141223T1308Z.box'
+  config.vm.box = 'logsearch-workspace-201501071717Z'
+  config.vm.box_url = 'https://s3-eu-west-1.amazonaws.com/ci-logsearch/vagrant/boxes/logsearch-workspace-201501071717Z.box'
   config.vm.hostname = 'logsearch-workspace'
 
   config.vm.provider :virtualbox do |v, override| 
+    config.vm.synced_folder ".", "/vagrant", mount_options: ["dmode=777"] # ensure any VM user can create files in subfolders - eg, /vagrant/tmp
     override.vm.network "private_network", ip: "192.168.50.4"
       #Enable NFS folder sharing if on Mac
       if RUBY_PLATFORM =~ /.*darwin.*/ 

@@ -221,6 +221,11 @@ fi
 echo "bosh_cli: Patched to add string diffing of changesets"
 
 #
+# util: Shrink vagrant VM
+#
+cp $SCRIPT_DIR/shrink_vagrant_box_for_packaging /root/shrink_vagrant_box_for_packaging
+
+#
 # system: awscli
 #
 if ! (which aws 1>/dev/null 2>&1) ; then
