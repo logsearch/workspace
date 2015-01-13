@@ -13,11 +13,11 @@ The instructions below walk through setting up a local Logsearch Workspace VM ba
 0. Installing above dependancies 
     * on Windows
 
-        We recommend you use the [Chololatey](https://chocolatey.org/) package manager to install the above dependancies on  Windows
+        We recommend you use the [Chocolatey](https://chocolatey.org/) package manager to install the above dependancies on  Windows
         
         Open an _Administrative PowerShell_ prompt and:
         
-            iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1')) # Installs Chololatey
+            iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1')) # Installs Chocolatey
             choco install git         # Installs git AND a ssh client
             choco install virtualbox  # Installs VirtualBox
             choco install vagrant     # Installs Vagrant
