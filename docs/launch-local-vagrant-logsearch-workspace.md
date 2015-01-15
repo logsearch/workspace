@@ -38,9 +38,9 @@ The instructions below walk through setting up a local Logsearch Workspace VM ba
 
     * _NB! On Windows you must run this from an Administrative console prompt_
 
-        git clone https://github.com/logsearch/workspace ~/logsearch-workspace
-        cd ~/logsearch-workspace
-        vagrant up
+            git clone https://github.com/logsearch/workspace ~/logsearch-workspace
+            cd ~/logsearch-workspace
+            vagrant up
           
 0. SSH into your workspace
     * Using the default SSH client: `vagrant ssh`
