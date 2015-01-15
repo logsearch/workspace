@@ -13,25 +13,8 @@ Using this workspace you can easily:
 
 ### Single user local Vagrant VM
 
-0. You need to have installed:
-    * Git 1.8+
-    * Vagrant 1.6.5+
-    * VirtualBox 4.3.18+
-    * A SSH client
-0. Launch a Vagrant VM (This downloads [a custom Vagrant box of approx 1.4GB in size from AWS S3](https://github.com/Logsearch/workspace/blob/master/Vagrantfile#L12))
-
-        git clone https://github.com/Logsearch/workspace ~/Logsearch-workspace
-        cd ~/Logsearch-workspace
-        vagrant up
-          
-0. SSH into your workspace
-    * Using the default SSH client on Mac: `vagrant ssh`
-    * Using a customised SSH client (eg, Kitty for Windows), you can get the SSH settings using `vagrant ssh-config`
-
-0. Perform one of the common Logsearch Workspace tasks, eg:
-    * [Launch your own test Logsearch cluster](http://www.logsearch.io/docs/boshrelease/getting-started/deploying-logsearch.html)
-    * [Administer an existing Logsearch cluster](http://www.logsearch.io/docs/workspace/administer-logsearch-cluster.html)
-    * [Develop & deploy a new Log Parsing filter](http://www.logsearch.io/docs/workspace/develop-a-logsearch-filter.html)
+You can run a single user local Logsearch Workspace VM using Vagrant.  This is the easiest way to get started with Logsearch.
+See [Lauch local Vagrant based Logsearch Workspace VM](http://www.logsearch.io/docs/workspace/launch-local-vagrant-logsearch-workspace.html) for details.
 
 #### Multi-user VM on EC2
 
@@ -45,7 +28,8 @@ See [How to setup a Multi-User Logsearch Workspace](http://www.logsearch.io/docs
 
 ## Further documentation
 
-See the [Documentation](docs/README.md) for more examples of things you can do with the Logsearch Workspace
+See the [Documentation](http://www.logsearch.io/docs/workspace) for more examples of things you can do with the Logsearch Workspace
+
 ## Copyright and License
 
-Copyright 2014 City Index Ltd.  Licensed under [Apache License 2.0](./LICENSE)
+Copyright 2014-2015 City Index Ltd.  Licensed under [Apache License 2.0](./LICENSE)

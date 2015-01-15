@@ -2,8 +2,7 @@
 title: "Using the LogSearch Workspace"
 ---
 
-# Using the LogSearch Workspace
-
+* [Lauch local Vagrant based Logsearch Workspace VM](launch-local-vagrant-logsearch-workspace.md)
 * [Launch a test LogSearch cluster](launch-test-logsearch-cluster.md)
 * Operating a LogSearch cluster
   * [Administer an existing LogSearch cluster](administer-logsearch-cluster.md)
