@@ -228,6 +228,16 @@ fi
 echo "tree: $(tree --version 2>&1)" | head -n 1
 
 #
+# util: tree
+#
+if ! (which rake 1>/dev/null 2>&1) ; then
+  echo "Installing Rake..."
+
+  gem install rake --no-ri --no-rdoc
+fi
+echo "rake: $(rake --version 2>&1)" | head -n 1
+
+#
 # util: patch bosh_cli to add string diffing of changesets
 #
 if ! (gem list diff-lcs | grep diff-lcs 1>/dev/null 2>&1) ; then
