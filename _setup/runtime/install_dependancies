@@ -157,6 +157,8 @@ if [ ! -f /usr/local/logstash-$LOGSTASH_VERSION/bin/logstash ]; then
     cd /usr/local/logstash-$LOGSTASH_VERSION
     bin/plugin install contrib
   )
+  echo "Patching output/syslog plugin to support structured_data..."
+  curl -L https://raw.githubusercontent.com/logsearch/logstash-output-syslog/master/lib/logstash/outputs/syslog.rb > /usr/local/logstash-$LOGSTASH_VERSION/lib/logstash/outputs/syslog.rb
   echo "Ensuring logstash is in the path"
   echo "export LOGSTASH_VERSION=\"${LOGSTASH_VERSION}\"" > /etc/profile.d/logstash.sh
   echo "export PATH=$PATH:/usr/local/logstash-${LOGSTASH_VERSION}/bin" >> /etc/profile.d/logstash.sh
