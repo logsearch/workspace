@@ -1,3 +1,4 @@
+require 'fileutils'
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.require_version ">= 1.6.5"
@@ -15,13 +16,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider :virtualbox do |v, override| 
     config.vm.synced_folder ".", "/vagrant", mount_options: ["dmode=777"] # ensure any VM user can create files in subfolders - eg, /vagrant/tmp
     override.vm.network "private_network", ip: "192.168.50.4"
-      #Enable NFS folder sharing if on Mac
-      if RUBY_PLATFORM =~ /.*darwin.*/ 
-        `mkdir -p workspace/environments`
-        `mkdir -p workspace/src`
-        override.vm.synced_folder "workspace/environments", "/home/vagrant/environments", type: "nfs"
-        override.vm.synced_folder "workspace/src", "/home/vagrant/src", type: "nfs"
-      end
+   
+    #Ensure workspace shares exist on host
+    FileUtils.mkdir_p('workspace/environments') unless File.exists?('workspace/environments')
+    FileUtils.mkdir_p('workspace/src') unless File.exists?('workspace/src')
+    #Enable NFS folder sharing if on Mac
+    if RUBY_PLATFORM =~ /.*darwin.*/ 
+      override.vm.synced_folder "workspace/environments", "/home/vagrant/environments", type: "nfs"
+      override.vm.synced_folder "workspace/src", "/home/vagrant/src", type: "nfs"
+    end
+    #Enable folder sharing if on Windows
+    if RUBY_PLATFORM =~ /.*mswin|windows|mingw|cygwin.*/
+      # enable symlinks http://stackoverflow.com/questions/24200333/symbolic-links-and-synced-folders-in-vagrant
+      v.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+      override.vm.synced_folder "workspace/environments", "/home/vagrant/environments", mount_options: ["dmode=777"]
+      override.vm.synced_folder "workspace/src", "/home/vagrant/src", mount_options: ["dmode=777"]
+    end
+
   end
 
   config.vm.provision "shell", run: "always", inline: <<EOF 
