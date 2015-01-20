@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+API_IP="10.244.10.2"
+
+echo "===> Uploading dashboards..."
+echo "* Geo-IP - "
+curl -s -XPUT -T "$SCRIPT_DIR/../kibana-dashboards/Geo-IP.json" $API_IP:9200/kibana-int/dashboard/Geo-IP
+
+echo "DONE!"
