@@ -27,4 +27,4 @@ END
 
 TODAY="#{Time.now.strftime('%d/%b/%Y')}"
 REPLACE_DATE_WITH_TODAY="sed -e 's/19\\/Jan\\/2015/#{TODAY.gsub('/','\/')}/g'"
-exec %Q[curl -s #{SAMPLE_DATA_URL} | tar xzO | #{REPLACE_DATE_WITH_TODAY} | vendor/logstash/bin/logstash agent -v -e '#{CONFIG_STRING}']
+exec %Q[curl -s #{SAMPLE_DATA_URL} | tar xzO | #{REPLACE_DATE_WITH_TODAY} | logstash agent -v -e '#{CONFIG_STRING}']
