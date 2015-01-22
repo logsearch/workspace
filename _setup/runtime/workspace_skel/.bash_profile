@@ -1,3 +1,5 @@
+source ~/.profile
+
 export EDITOR=vim
 
 GREEN="\[\e[0;32m\]"
