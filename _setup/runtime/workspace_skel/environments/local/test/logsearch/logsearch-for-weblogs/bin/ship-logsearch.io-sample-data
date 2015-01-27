@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
-puts "===> Loading test data ..."
 INGESTOR_IP = "10.244.10.6"
 SAMPLE_DATA_URL = "https://s3-eu-west-1.amazonaws.com/ci-logsearch/logs/logsearch.io/logsearch.io-nginx-access-20150119.log.tar.gz"
+
+puts "===> Loading test data ..."
+puts "Importing data from #{SAMPLE_DATA_URL}"
 
 CONFIG_STRING = <<END
 input {
