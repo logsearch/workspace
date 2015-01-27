@@ -6,11 +6,11 @@ Vagrant.require_version ">= 1.6.5"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   #Ubuntu 14.04 VM with BOSH lite installed (used to create a new logsearch-workspace box from scratch via 'vagrant package')
-#  config.vm.box = 'cloudfoundry/bosh-lite'
-#  config.vm.box_version = '388'
+  #config.vm.box = 'cloudfoundry/bosh-lite'
+  #config.vm.box_version = '388'
   #Provisioned LogSearch workspace (created from 'cloudfoundry/bosh-lite' via 'vagrant package', see above)
-  config.vm.box = 'logsearch-workspace-201501071717Z'
-  config.vm.box_url = 'https://s3-eu-west-1.amazonaws.com/ci-logsearch/vagrant/boxes/logsearch-workspace-201501071717Z.box'
+  config.vm.box = 'logsearch-workspace-201501270921Z'
+  config.vm.box_url = 'https://s3-eu-west-1.amazonaws.com/ci-logsearch/vagrant/boxes/logsearch-workspace-201501270921Z.box'
   config.vm.hostname = 'logsearch-workspace'
 
   config.vm.provider :virtualbox do |v, override| 
