@@ -34,7 +34,7 @@ The instructions below walk through setting up a local Logsearch Workspace VM ba
             brew cask install virtualbox           # Installs VirtualBox
             brew cask install vagrant              # Installs Vagrant
 
-0. Launch a Vagrant VM (This downloads [a custom Vagrant box of approx 1.4GB in size from AWS S3](https://github.com/Logsearch/workspace/blob/master/Vagrantfile#L12))
+0. Launch a Vagrant VM (This downloads [a custom Vagrant box of approx 1.6GB in size from AWS S3](https://github.com/Logsearch/workspace/blob/master/Vagrantfile#L12))
 
     * _NB! On Windows you must run this from an Administrative console prompt_
 
