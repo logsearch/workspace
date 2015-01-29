@@ -163,6 +163,11 @@ if [ ! -f /usr/local/logstash-$LOGSTASH_VERSION/bin/logstash ]; then
   echo "export LOGSTASH_VERSION=\"${LOGSTASH_VERSION}\"" > /etc/profile.d/logstash.sh
   echo "export PATH=$PATH:/usr/local/logstash-${LOGSTASH_VERSION}/bin" >> /etc/profile.d/logstash.sh
 fi
+if [ ! -f /var/vcap/packages/logstash/logstash/vendor/geoip/GeoLiteCity.dat ]; then
+  mkdir -p /var/vcap/packages/logstash
+  ln -s /usr/local/logstash-$LOGSTASH_VERSION /var/vcap/packages/logstash/logstash
+fi
+
 echo "logstash: v$LOGSTASH_VERSION"
 
 #
