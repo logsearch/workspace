@@ -7,15 +7,12 @@
 
 # Unmount project
 umount /vagrant
+umount /home/vagrant/environments
+umount /home/vagrant/src
  
-# Remove APT cache
-apt-get clean -y
-apt-get autoclean -y
- 
-# Zero free space to aid VM compression
-echo "You can ignore: no space left on device errors"
-dd if=/dev/zero of=/EMPTY bs=1M
-rm -f /EMPTY
+# Clean up apt
+apt-get autoremove -y # Clean up any unused dependencies 
+apt-get autoclean -y  # Clean up partial package
  
 # Remove APT files
 find /var/lib/apt -type f | xargs rm -f
@@ -37,6 +34,13 @@ rm -rf /home/vagrant/.env
 
 # Cleanup log files
 find /var/log -type f | while read f; do echo -ne '' > $f; done;
+
+# Zero free space to aid VM compression
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+echo "You can ignore: no space left on device errors"
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+dd if=/dev/zero of=/EMPTY bs=1M
+rm -f /EMPTY
 
 # Whiteout root
 count=`df --sync -kP / | tail -n1  | awk -F ' ' '{print $4}'`;
