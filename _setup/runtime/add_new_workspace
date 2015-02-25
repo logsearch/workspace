@@ -65,6 +65,7 @@ end
 `echo 'Port Mappings:' > #{options[:home_dir]}/port_mappings.txt`
 expose_container options[:local_ip], "#{10+options[:tenant_number]}080",  "10.244.#{10+options[:tenant_number]}.2", 80, options
 expose_container options[:local_ip], "#{10+options[:tenant_number]}443", "10.244.#{10+options[:tenant_number]}.6", 443, options
+expose_container options[:local_ip], "#{10+options[:tenant_number]}081", "10.244.#{10+options[:tenant_number]}.14", 80, options
 
 `echo 'export LOCAL_IP="#{options[:local_ip]}"' >> #{options[:home_dir]}/.bash_profile`
 `echo 'export TENANT_NUMBER=#{options[:tenant_number]}' >> #{options[:home_dir]}/.bash_profile`

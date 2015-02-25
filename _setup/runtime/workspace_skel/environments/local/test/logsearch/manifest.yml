@@ -29,19 +29,27 @@ update:
 resource_pools:
 - name: warden
   network: warden
-  size: 6
+  size: 7
   stemcell:
     name: bosh-warden-boshlite-ubuntu-trusty-go_agent
     version: latest
   cloud_properties: {}
 
 jobs:
+- name: kibana
+  instances: 1
+  resource_pool: warden
+  networks:
+  - name: warden
+    static_ips:
+    - 10.244.<%=ip_block%>.14
+  templates:
+  - { name: kibana, release: logsearch }
 - name: api
   release: logsearch
   templates: 
   - name: elasticsearch
   - name: api
-  - name: collectd
   update:
     serial: true
   instances: 1
@@ -51,9 +59,6 @@ jobs:
     static_ips:
     - 10.244.<%=ip_block%>.2
   properties:
-    collectd:
-      python_elasticsearch:
-        enabled: true
     elasticsearch:
       node:
         allow_data: false
@@ -69,7 +74,6 @@ jobs:
 - name: ingestor
   release: logsearch
   templates:
-  - name: collectd
   - name: ingestor_syslog
   instances: 1
   resource_pool: warden
@@ -81,7 +85,6 @@ jobs:
 - name: queue
   release: logsearch
   templates:
-  - name: collectd
   - name: queue
   instances: 1
   resource_pool: warden
@@ -89,15 +92,10 @@ jobs:
   - name: warden
     static_ips:
     - 10.244.<%=ip_block%>.10
-  properties:
-    collectd:
-      python_redis:
-        enabled: true
 
 - name: log_parser
   release: logsearch
   templates:
-  - name: collectd
   - name: log_parser
   instances: 1
   resource_pool: warden
@@ -108,7 +106,6 @@ jobs:
   release: logsearch
   templates:
   - name: elasticsearch
-  - name: collectd
   update:
     serial: true
   instances: 1
@@ -117,9 +114,6 @@ jobs:
   - name: warden
   persistent_disk: 1024
   properties:
-    collectd:
-      python_elasticsearch:
-        enabled: true
     elasticsearch:
       node:
         allow_master: false
@@ -128,7 +122,6 @@ jobs:
   release: logsearch
   templates:
   - name: elasticsearch
-  - name: collectd
   update:
     serial: true
   instances: 1
@@ -137,14 +130,14 @@ jobs:
   - name: warden
   persistent_disk: 1024
   properties:
-    collectd:
-      python_elasticsearch:
-        enabled: true
     elasticsearch:
       node:
         allow_master: false
 
 properties: 
+  kibana:
+    elasticsearch: http://127.0.0.1:9200
+    port: 80 
   elasticsearch:
     host: 10.244.<%=ip_block%>.2
     cluster_name: <%= deployment_name %>
