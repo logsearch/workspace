@@ -4,6 +4,7 @@ title: "Using the LogSearch Workspace"
 
 * [Launch local Vagrant based Logsearch Workspace VM](http://www.logsearch.io/docs/boshrelease/getting-started/deploying-logsearch.html#start-a-logsearch-workspace)
 * [Launch a test LogSearch cluster](launch-test-logsearch-cluster.md)
+  * [Restoring a Logsearch Workspace deployment after rebooting](recovering-after-a-reboot.md)
 * Operating a LogSearch cluster
   * [Administer an existing LogSearch cluster](administer-logsearch-cluster.md)
   * [Setting Workspace Environment Variables](setting-workspace-environment-variables.md)
