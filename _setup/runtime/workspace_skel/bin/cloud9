@@ -3,18 +3,17 @@
 PORT="1${TENANT_NUMBER}000"
 
 if [ ! -d ~/bin/cloud9-editor ] ; then
-  echo "Installing Cloud9 IDE..."
-  mkdir -p ~/bin/cloud9-editor
-  curl -sL https://github.com/ajaxorg/cloud9/tarball/master \
-  	| tar zxv -C ~/bin/cloud9-editor --strip 1 
+  echo "Installing Cloud9 IDE (this takes a couple of minutes, but only has to run once :) ..."
 
-  (
-    cd ~/bin/cloud9-editor
-    npm install
-  )
+  git clone https://github.com/c9/core.git ~/bin/cloud9-editor
+  pushd ~/bin/cloud9-editor
+    git checkout 1043a72bd5566e9f7222ff331a57cc334a95bb08
+    scripts/install-sdk.sh
+  popd
+
 fi
 
 echo "==================================================="
-echo "Launching Cloud9 IDE at http://$LOCAL_IP:$PORT"
+echo "Launching Cloud9 IDE at http://$LOCAL_IP:$PORT with credentials cloud9/cloud9"
 echo "==================================================="
-~/bin/cloud9-editor/bin/cloud9.sh -l $LOCAL_IP -w ~/ -p $PORT
+node ~/bin/cloud9-editor/server.js -l $LOCAL_IP -w ~/ -p $PORT -a cloud9:cloud9
