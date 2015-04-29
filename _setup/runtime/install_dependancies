@@ -10,6 +10,19 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 #
+# system: node & npm  #NB - this triggers an apt-get update
+#
+if ! (which nodejs 1>/dev/null 2>&1) ; then
+  echo "Installing NodeJs & NPM ..."
+  # Note the new setup script name for Node.js v0.12
+  curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
+  apt-get install -y nodejs
+
+  ln -s /usr/bin/nodejs /usr/bin/node
+fi
+echo "nodejs: $(nodejs -v)" | head -n 1
+
+#
 # system: docker
 #
 if ! (which docker 1>/dev/null 2>&1) ; then
@@ -50,6 +63,64 @@ if [ ! -f /usr/bin/curl ]; then
 fi
 echo "curl: $(curl --version)" | head -n 1
 
+
+#
+# system: ruby 2.1.4p265 - replace Ubuntu's ruby 1.9 with the BOSH packaged version of ruby 
+#
+if [[ ! "$(ruby -v)" =~ "ruby 2.1." ]]; then
+  echo "Replacing Ubuntu's ruby 1.9 with the BOSH packaged version of ruby "
+  apt-get remove ruby -y
+  rm -rf /usr/local/bin/aws-rb
+  rm -rf /usr/local/bin/blobstore_client_console
+  rm -rf /usr/local/bin/bosh-template 
+  rm -rf /usr/local/bin/fog
+  rm -rf /usr/local/bin/htmldiff 
+  rm -rf /usr/local/bin/httpclient 
+  rm -rf /usr/local/bin/minitar 
+  rm -rf /usr/local/bin/nokogiri 
+  rm -rf /usr/local/bin/rake 
+
+  echo "Ensuring Ruby 2.1 is in the path"
+  echo "export PATH=$PATH:/var/vcap/packages/ruby/bin" >> /etc/profile.d/ruby2.1.sh # for future sessions
+  PATH=$PATH:/var/vcap/packages/ruby/bin # for the rest of this script
+fi
+echo "ruby: $(ruby -v)" | head -n 1
+
+#
+# util: bosh_cli
+#
+if ! (gem list bosh_cli | grep bosh_cli 1>/dev/null 2>&1) ; then
+  echo "Installing bosh-cli"
+  gem install bosh_cli -v 1.2811.0 --no-ri --no-rdoc
+fi
+echo "bosh_cli: $(bosh -v)" | head -n 1
+
+#
+# util: patch bosh_cli to add string diffing of changesets
+#
+if ! (gem list diff-lcs | grep diff-lcs 1>/dev/null 2>&1) ; then
+  echo "Patching bosh_cli to add string diffing of changesets"
+
+  gem install diff-lcs --no-ri --no-rdoc
+  (
+    cd /var/vcap/packages/ruby/lib/ruby/gems/2.1.0/gems/bosh_cli-1.*
+    patch -p0 < $SCRIPT_DIR/patches/bosh_cli-string-diff.patch
+  )
+fi
+echo "bosh_cli: Patched to add string diffing of changesets"
+
+#
+# util: bosh-workspace
+#
+if ! (gem list bosh-workspace | grep bosh-workspace 1>/dev/null 2>&1) ; then
+  echo "Installing bosh-workspace"
+  apt-get install pkg-config -y
+  #gem install specific_install --no-ri --no-rdoc
+  #gem specific_install https://github.com/cloudfoundry-incubator/bosh-workspace.git v0.9.0.rc4
+  yes y | gem install bosh-workspace -v 0.9.0.rc4 --pre
+fi
+echo "bosh-workspace: $(gem list bosh-workspace)" | tail -n 1
+
 #
 # system: git
 #
@@ -74,8 +145,9 @@ echo "bsdtar: $(bsdtar --version)"
 if ! (which spiff 1>/dev/null 2>&1) ; then
   echo "Installing spiff..."
 
-  curl -L https://github.com/cloudfoundry-incubator/spiff/releases/download/v1.0.3/spiff_linux_amd64.zip | sudo bsdtar -xvf- -C /usr/local/bin
-  sudo chmod +x /usr/local/bin/spiff
+  curl -L https://github.com/cloudfoundry-incubator/spiff/releases/download/v1.0.6/spiff_linux_amd64.zip | bsdtar -xvf- -C /usr/bin
+  chmod +x /usr/bin/spiff
+
 fi
 echo "spiff: $(spiff --version)" | head -n 1
 
@@ -97,17 +169,6 @@ if ! (which java 1>/dev/null 2>&1) ; then
   apt-get install -y openjdk-7-jre-headless
 fi
 echo "java: $(java -version 2>&1 | awk -F '\\"' '/version/ { print $2 }')"
-
-#
-# system: node & npm
-#
-if ! (which nodejs 1>/dev/null 2>&1) ; then
-  echo "Installing NodeJs & NPM ..."
-
-  apt-get install -y nodejs npm
-  ln -s /usr/bin/nodejs /usr/bin/node
-fi
-echo "nodejs: $(nodejs -v)" | head -n 1
 
 #
 # system: grunt-cli
@@ -140,35 +201,44 @@ if ! (which jekyll 1>/dev/null 2>&1) ; then
   # rather than the system ruby (which is ruby 1.9) 
 
   /var/vcap/packages/ruby/bin/gem install jekyll --no-rdoc --no-ri
-  ln -s /var/vcap/packages/ruby/bin/jekyll /usr/local/bin/jekyll 
 fi
 echo "jekyll: $(jekyll -version)" | head -n 1
 
 #
 # system: logstash
 #
-LOGSTASH_VERSION="1.4.0"
+LOGSTASH_VERSION="1.5.0-rc3"
 if [ ! -f /usr/local/logstash-$LOGSTASH_VERSION/bin/logstash ]; then
   echo "Installing logstash-$LOGSTASH_VERSION ..."
-
-  curl -L "https://download.elasticsearch.org/logstash/logstash/logstash-$LOGSTASH_VERSION.tar.gz" | tar -xzf- -C /usr/local
-  echo "Installing Logstash community plugins.  This takes a few minutes..."
+  curl -L "https://download.elastic.co/logstash/logstash/logstash-$LOGSTASH_VERSION.tar.gz" | tar -xzf- -C /usr/local
+  echo "Installing Logstash plugins.  This takes a few minutes..."
   (
     cd /usr/local/logstash-$LOGSTASH_VERSION
-    bin/plugin install contrib
+    bin/plugin install --development # so we can use logstash rspec
+    bin/plugin install logstash-filter-alter
+    bin/plugin install logstash-filter-translate
   )
+  echo "Fixing permissions"
+  chmod a+r+w /usr/local/logstash-$LOGSTASH_VERSION/.bundle/config 
   echo "Patching output/syslog plugin to support structured_data..."
   curl -L https://raw.githubusercontent.com/logsearch/logstash-output-syslog/master/lib/logstash/outputs/syslog.rb > /usr/local/logstash-$LOGSTASH_VERSION/lib/logstash/outputs/syslog.rb
   echo "Ensuring logstash is in the path"
   echo "export LOGSTASH_VERSION=\"${LOGSTASH_VERSION}\"" > /etc/profile.d/logstash.sh
-  echo "export PATH=$PATH:/usr/local/logstash-${LOGSTASH_VERSION}/bin" >> /etc/profile.d/logstash.sh
+  echo "export PATH=/usr/local/logstash-${LOGSTASH_VERSION}/bin:$PATH" >> /etc/profile.d/logstash.sh
 fi
-if [ ! -f /var/vcap/packages/logstash/logstash/vendor/geoip/GeoLiteCity.dat ]; then
-  mkdir -p /var/vcap/packages/logstash
-  ln -s /usr/local/logstash-$LOGSTASH_VERSION /var/vcap/packages/logstash/logstash
-fi
-
 echo "logstash: v$LOGSTASH_VERSION"
+
+#
+# util: drip
+#
+if ! (which drip 1>/dev/null 2>&1) ; then
+  echo "Installing drip..."
+
+  curl -L https://raw.githubusercontent.com/ninjudd/drip/master/bin/drip > /usr/bin/drip
+  chmod 755 /usr/bin/drip
+  drip # Run once to download
+fi
+echo "drip: $(drip version)" | head -n 1
 
 #
 # util: vim
@@ -244,20 +314,6 @@ fi
 echo "rake: $(rake --version 2>&1)" | head -n 1
 
 #
-# util: patch bosh_cli to add string diffing of changesets
-#
-if ! (gem list diff-lcs | grep diff-lcs 1>/dev/null 2>&1) ; then
-  echo "Patching bosh_cli to add string diffing of changesets"
-
-  gem install diff-lcs --no-ri --no-rdoc
-  (
-    cd /var/lib/gems/1.9.1/gems/bosh_cli-1.*
-    patch -p0 < $SCRIPT_DIR/patches/bosh_cli-string-diff.patch
-  )
-fi
-echo "bosh_cli: Patched to add string diffing of changesets"
-
-#
 # util: Shrink vagrant VM
 #
 cp $SCRIPT_DIR/shrink_vagrant_box_for_packaging /root/shrink_vagrant_box_for_packaging
@@ -268,9 +324,11 @@ cp $SCRIPT_DIR/shrink_vagrant_box_for_packaging /root/shrink_vagrant_box_for_pac
 if ! (which aws 1>/dev/null 2>&1) ; then
   echo "Installing aws cli..."
 
-  apt-get install -y python-pip
+  apt-get install -y python
+  curl "https://bootstrap.pypa.io/get-pip.py" -o "/root/get-pip.py"
+  python /root/get-pip.py
   pip install --upgrade awscli httpie
-  bash -c "complete -C '/usr/local/bin/aws_completer' aws"
+  bash -c "complete -C '/usr/bin/aws_completer' aws"
 fi
 echo "awscli: $(aws --version 2>&1)" | head -n 1
 echo "python: $(python --version 2>&1)" | head -n 1

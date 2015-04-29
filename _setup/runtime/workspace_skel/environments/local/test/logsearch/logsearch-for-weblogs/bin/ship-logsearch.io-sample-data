@@ -1,6 +1,27 @@
 #!/usr/bin/env ruby
 INGESTOR_IP = "10.244.10.6"
+API_IP = "10.244.10.2"
 SAMPLE_DATA_URL = "https://s3-eu-west-1.amazonaws.com/ci-logsearch/logs/logsearch.io/logsearch.io-nginx-access-20150119.log.tar.gz"
+
+puts "HACK: Ensure the nginx_combined.geoip.location mapping is geo_point: "
+MAPPING_OVERRIDE = <<END
+{
+  "mappings" : {
+    "nginx_combined" : {
+      "properties" : {
+        "geoip" : {
+          "properties" : {
+            "location" : {
+              "type" : "geo_point"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+END
+system %Q[curl -XPOST "http://#{API_IP}:9200/logstash-$(date +%Y.%m.%d)" -d '#{MAPPING_OVERRIDE}']
 
 puts "===> Loading test data ..."
 puts "Importing data from #{SAMPLE_DATA_URL}"
@@ -29,4 +50,6 @@ END
 
 TODAY="#{Time.now.strftime('%d/%b/%Y')}"
 REPLACE_DATE_WITH_TODAY="sed -e 's/19\\/Jan\\/2015/#{TODAY.gsub('/','\/')}/g'"
-exec %Q[curl -s #{SAMPLE_DATA_URL} | tar xzO | #{REPLACE_DATE_WITH_TODAY} | logstash agent -v -e '#{CONFIG_STRING}']
+system %Q[curl -s #{SAMPLE_DATA_URL} | tar xzO | #{REPLACE_DATE_WITH_TODAY} | logstash agent -v -e '#{CONFIG_STRING}']
+
+puts "DONE!"

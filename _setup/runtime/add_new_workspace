@@ -46,7 +46,7 @@ end
 `adduser #{options[:username]} docker`
 `rsync -rtv #{SCRIPT_DIR}/workspace_skel/ #{options[:home_dir]}/`
 
-`echo "#{options[:public_key]}" >> #{options[:home_dir]}/.ssh/authorized_keys`
+`if ! (grep '#{options[:public_key]}' #{options[:home_dir]}/.ssh/authorized_keys 1>/dev/null 2>&1) ; then echo "#{options[:public_key]}" >> #{options[:home_dir]}/.ssh/authorized_keys; fi`
 
 `chown -R #{options[:username]}:#{options[:username]} #{options[:home_dir]} 2>&1 > /dev/null`
 

@@ -3,15 +3,13 @@
 +-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+-+
 
 ├── bin
-│   └── setup_sub_projects               <--- run this to populate your environments/ and src/ folders
-├── environments                         <--- configuration for the environments you manage goes here
-│   └── labs-operations                  
-├── src                                  <--- LogSearch source code goes here
-│   ├── docs
-│   ├── kibana                           
-│   ├── kibana-status-diagram-plugin
-│   ├── logsearch-filters-internal
-│   └── logsearch-website
-
-See the README.md in each sub project for further instructions.
+│   └── cloud9                     <--- Launch the Cloud9 browser based IDE to edit your files
+│
+├── environments                   <--- configuration for the environments you manage goes here
+│   └── local                  
+│
+├── src                            <--- Logsearch source code goes here
+│   ├── logsearch-boshrelease
+│   ├── logsearch-for-websites
+│   └── logsearch-for-cloudfoundry 
 
