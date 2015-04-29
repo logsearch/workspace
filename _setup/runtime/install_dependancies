@@ -235,8 +235,8 @@ echo "logstash: v$LOGSTASH_VERSION"
 if ! (which drip 1>/dev/null 2>&1) ; then
   echo "Installing drip..."
 
-  curl -L https://raw.githubusercontent.com/ninjudd/drip/master/bin/drip > /usr/local/bin/drip
-  chmod 755 /usr/local/bin/drip
+  curl -L https://raw.githubusercontent.com/ninjudd/drip/master/bin/drip > /usr/bin/drip
+  chmod 755 /usr/bin/drip
   drip # Run once to download
 fi
 echo "drip: $(drip version)" | head -n 1
@@ -329,7 +329,7 @@ if ! (which aws 1>/dev/null 2>&1) ; then
   curl "https://bootstrap.pypa.io/get-pip.py" -o "/root/get-pip.py"
   python /root/get-pip.py
   pip install --upgrade awscli httpie
-  bash -c "complete -C '/usr/local/bin/aws_completer' aws"
+  bash -c "complete -C '/usr/bin/aws_completer' aws"
 fi
 echo "awscli: $(aws --version 2>&1)" | head -n 1
 echo "python: $(python --version 2>&1)" | head -n 1
