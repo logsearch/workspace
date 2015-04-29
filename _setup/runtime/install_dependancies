@@ -67,7 +67,7 @@ echo "curl: $(curl --version)" | head -n 1
 #
 # system: ruby 2.1.4p265 - replace Ubuntu's ruby 1.9 with the BOSH packaged version of ruby 
 #
-if [[ ! "$(ruby -v)" =~ "ruby 2.1.4p265" ]]; then
+if [[ ! "$(ruby -v)" =~ "ruby 2.1." ]]; then
   echo "Replacing Ubuntu's ruby 1.9 with the BOSH packaged version of ruby "
   apt-get remove ruby -y
   rm -rf /usr/local/bin/aws-rb
@@ -76,7 +76,6 @@ if [[ ! "$(ruby -v)" =~ "ruby 2.1.4p265" ]]; then
   rm -rf /usr/local/bin/fog
   rm -rf /usr/local/bin/htmldiff 
   rm -rf /usr/local/bin/httpclient 
-  rm -rf /usr/local/bin/
   rm -rf /usr/local/bin/minitar 
   rm -rf /usr/local/bin/nokogiri 
   rm -rf /usr/local/bin/rake 
