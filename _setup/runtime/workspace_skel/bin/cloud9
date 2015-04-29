@@ -16,4 +16,4 @@ fi
 echo "==================================================="
 echo "Launching Cloud9 IDE at http://$LOCAL_IP:$PORT with credentials cloud9/cloud9"
 echo "==================================================="
-node ~/bin/cloud9-editor/server.js -l $LOCAL_IP -w ~/ -p $PORT -a cloud9:cloud9
+node ~/bin/cloud9-editor/server.js -l $LOCAL_IP -w ~/ -p $PORT -a cloud9:cloud9 --packed
