@@ -2,7 +2,7 @@
 |L|o|g|S|e|a|r|c|h| |W|o|r|k|s|p|a|c|e|
 +-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+-+
 
-├── binß
+├── bin
 │   └── cloud9                     <--- Launch the Cloud9 browser based IDE to edit your files
 │
 ├── environments                   <--- configuration for the environments you manage goes here
@@ -12,3 +12,4 @@
 │   ├── logsearch-boshrelease
 │   ├── logsearch-for-websites
 │   └── logsearch-for-cloudfoundry 
+
