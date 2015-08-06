@@ -35,3 +35,4 @@ build/
 
 .vagrant/
 workspace/
+*.tfstate*
