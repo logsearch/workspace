@@ -85,13 +85,14 @@ fi
 echo "ruby: $(ruby -v)" | head -n 1
 
 #
-# util: bosh_cli
-#
-if ! (gem list bosh_cli | grep bosh_cli 1>/dev/null 2>&1) ; then
-  echo "Installing bosh-cli"
-  gem install bosh_cli -v 1.2811.0 --no-ri --no-rdoc
+# util: bosh-workspace
+# This pulls bosh_cli as a dep
+if ! (gem list bosh-workspace | grep bosh-workspace 1>/dev/null 2>&1) ; then
+  echo "Installing bosh-workspace"
+  apt-get install pkg-config -y
+  yes y | gem install bosh-workspace -v 0.9.0 --no-ri --no-rdoc
 fi
-echo "bosh_cli: $(bosh -v)" | head -n 1
+echo "bosh-workspace: $(gem list bosh-workspace)" | tail -n 1
 
 #
 # util: patch bosh_cli to add string diffing of changesets
@@ -106,18 +107,6 @@ if ! (gem list diff-lcs | grep diff-lcs 1>/dev/null 2>&1) ; then
   )
 fi
 echo "bosh_cli: Patched to add string diffing of changesets"
-
-#
-# util: bosh-workspace
-#
-if ! (gem list bosh-workspace | grep bosh-workspace 1>/dev/null 2>&1) ; then
-  echo "Installing bosh-workspace"
-  apt-get install pkg-config -y
-  #gem install specific_install --no-ri --no-rdoc
-  #gem specific_install https://github.com/cloudfoundry-incubator/bosh-workspace.git v0.9.0.rc4
-  yes y | gem install bosh-workspace -v 0.9.0.rc4 --pre
-fi
-echo "bosh-workspace: $(gem list bosh-workspace)" | tail -n 1
 
 #
 # system: git
