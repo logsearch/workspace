@@ -108,6 +108,11 @@ if ! (gem list diff-lcs | grep diff-lcs 1>/dev/null 2>&1) ; then
 fi
 echo "bosh_cli: Patched to add string diffing of changesets"
 
+echo "bosh_cli: make sure we use the newly installed bosh_cli bin"
+sudo rm /usr/local/bin/bosh
+sudo cp /var/vcap/packages/ruby/lib/ruby/gems/2.1.0/gems/bosh_cli-*/bin/bosh /usr/local/bin/bosh
+
+
 #
 # system: git
 #
@@ -329,7 +334,7 @@ service ssh reload
 if [ $(dpkg-query -W -f='${Status}' iptables-persistent 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
   echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
-  echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
+1  echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
   apt-get install iptables-persistent -y
 fi
 
