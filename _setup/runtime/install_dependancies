@@ -63,20 +63,20 @@ echo "curl: $(curl --version)" | head -n 1
 
 
 #
-# system: ruby 2.1.4p265 - replace Ubuntu's ruby 1.9 with the BOSH packaged version of ruby 
+# system: ruby 2.1.4p265 - replace Ubuntu's ruby 1.9 with the BOSH packaged version of ruby
 #
 if [[ ! "$(ruby -v)" =~ "ruby 2.1." ]]; then
   echo "Replacing Ubuntu's ruby 1.9 with the BOSH packaged version of ruby "
   apt-get remove ruby -y
   rm -rf /usr/local/bin/aws-rb
   rm -rf /usr/local/bin/blobstore_client_console
-  rm -rf /usr/local/bin/bosh-template 
+  rm -rf /usr/local/bin/bosh-template
   rm -rf /usr/local/bin/fog
-  rm -rf /usr/local/bin/htmldiff 
-  rm -rf /usr/local/bin/httpclient 
-  rm -rf /usr/local/bin/minitar 
-  rm -rf /usr/local/bin/nokogiri 
-  rm -rf /usr/local/bin/rake 
+  rm -rf /usr/local/bin/htmldiff
+  rm -rf /usr/local/bin/httpclient
+  rm -rf /usr/local/bin/minitar
+  rm -rf /usr/local/bin/nokogiri
+  rm -rf /usr/local/bin/rake
 
   echo "Ensuring Ruby 2.1 is in the path"
   echo "export PATH=$PATH:/var/vcap/packages/ruby/bin" >> /etc/profile.d/ruby2.1.sh # for future sessions
@@ -201,7 +201,7 @@ if [ ! -f /usr/local/logstash-$LOGSTASH_VERSION/bin/logstash ]; then
     bin/plugin install logstash-filter-translate
   )
   echo "Fixing permissions"
-  chmod a+r+w /usr/local/logstash-$LOGSTASH_VERSION/.bundle/config 
+  chmod a+r+w /usr/local/logstash-$LOGSTASH_VERSION/.bundle/config
   echo "Patching output/syslog plugin to support structured_data..."
   curl -L https://raw.githubusercontent.com/logsearch/logstash-output-syslog/master/lib/logstash/outputs/syslog.rb > /usr/local/logstash-$LOGSTASH_VERSION/lib/logstash/outputs/syslog.rb
   echo "Ensuring logstash is in the path"
