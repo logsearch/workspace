@@ -182,12 +182,7 @@ echo "bower: $( bower --version)" | head -n 1
 #
 if ! (which jekyll 1>/dev/null 2>&1) ; then
   echo "Installing jekyll ..."
-
-  # jekyll needs to use ruby 2+ (or jekyll serve fails wih https://github.com/celluloid/celluloid/wiki/Fiber-stack-errors)
-  # so we install it for /var/vcap/packages/ruby (which is ruby 2.1) 
-  # rather than the system ruby (which is ruby 1.9) 
-
-  /var/vcap/packages/ruby/bin/gem install jekyll --no-rdoc --no-ri
+  gem install jekyll --no-rdoc --no-ri
 fi
 echo "jekyll: $(jekyll -version)" | head -n 1
 
