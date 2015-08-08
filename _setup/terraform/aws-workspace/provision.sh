@@ -5,13 +5,25 @@ sudo apt-get update
 sudo apt-get -y install git
 
 echo "Mounting persistent disk as as /workspaces..."
-# TODO: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
+# Create partition and format the persistent disk if not already formatted
+sudo file -s /dev/xvdf | grep ext4 > /dev/null
+if (($? != 0)); then
+    echo "Creating ext4 filesystem on persistent disk"
+    sudo mkfs.ext4 /dev/xvdf
+fi
+
+sudo mkdir -p /workspaces
+
+mount | grep /workspaces
+if (($? != 0)); then
+    sudo mount /dev/xvdf /workspaces
+fi
 
 echo "Relocating all user home dirs to /workspaces..."
 # TODO
 
 echo "Installing logsearch-workspace dependancies..."
-# TODO: 
+# TODO:
 # sudo git clone https://github.com/logsearch/workspace /root/logsearch-workspace
 # sudo /root/logsearch-workspace/_setup/runtime/install_dependancies
 
