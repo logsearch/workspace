@@ -17,8 +17,6 @@ if ! (which nodejs 1>/dev/null 2>&1) ; then
   # Note the new setup script name for Node.js v0.12
   curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
   apt-get install -y nodejs
-
-  ln -s /usr/bin/nodejs /usr/bin/node
 fi
 echo "nodejs: $(nodejs -v)" | head -n 1
 

@@ -23,9 +23,9 @@ echo "Relocating all user home dirs to /workspaces..."
 # TODO
 
 echo "Installing logsearch-workspace dependancies..."
-# TODO:
-# sudo git clone https://github.com/logsearch/workspace /root/logsearch-workspace
-# sudo /root/logsearch-workspace/_setup/runtime/install_dependancies
+# HEY! WE NEED THE TODO BRANCH HERE SINCE THERE IS A ISSUE IN THE INSTALL_DEPENDANCIES SCTIPT.
+sudo git clone -b todo https://github.com/logsearch/workspace /tmp/workspace
+sudo /tmp/workspace/_setup/runtime/install_dependancies
 
 echo "Provision user accounts"
 # TODO - not sure this step can/should be automated
