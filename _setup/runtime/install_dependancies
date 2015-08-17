@@ -159,6 +159,7 @@ if ! (which java 1>/dev/null 2>&1) ; then
   echo "Installing java..."
 
   apt-get install -y openjdk-7-jre-headless
+  echo 'export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"' >> /etc/profile
 fi
 echo "java: $(java -version 2>&1 | awk -F '\\"' '/version/ { print $2 }')"
 
