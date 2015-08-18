@@ -156,9 +156,11 @@ echo "hg: $(hg --version)" | head -n 1
 # system: java
 #
 if ! (which java 1>/dev/null 2>&1) ; then
-  echo "Installing java..."
-
-  apt-get install -y openjdk-7-jre-headless
+  echo "Installing OpenJDK 8..."
+  add-apt-repository -y ppa:openjdk-r/ppa
+  apt-get update
+  apt-get install -y openjdk-8-jdk
+  echo 'export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"' >> /etc/profile
 fi
 echo "java: $(java -version 2>&1 | awk -F '\\"' '/version/ { print $2 }')"
 
