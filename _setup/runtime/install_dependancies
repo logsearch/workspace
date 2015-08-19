@@ -30,6 +30,17 @@ if ! (which docker 1>/dev/null 2>&1) ; then
 fi
 echo "docker: $(docker --version 2>&1)" | head -n 1
 
+
+#
+# system: docker-compose
+#
+if ! (which docker-compose 1>/dev/null 2>&1) ; then
+  echo "Installing docker-compose..."
+   curl -L https://github.com/docker/compose/releases/download/1.4.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+   chmod +x /usr/local/bin/docker-compose
+fi
+echo "docker-compose: $(docker-compose --version 2>&1)" | head -n 1
+
 #
 # system: apparmor
 # Fixes: set apparmor profile docker-default: no such file or directory
@@ -144,6 +155,16 @@ fi
 echo "spiff: $(spiff --version)" | head -n 1
 
 #
+# system: zip and unzip
+#
+if ! (which zip 1>/dev/null 2>&1) ; then
+  echo "Installing zip and unzip"
+  apt-get install zip unzip -y
+fi
+echo "zip/unzip: $(zip -v | head -n 1)/$(unzip -v | head -n 1)"
+
+#
+#
 # system: hg
 #
 if ! (which hg 1>/dev/null 2>&1) ; then
@@ -163,6 +184,16 @@ if ! (which java 1>/dev/null 2>&1) ; then
   echo 'export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"' >> /etc/profile
 fi
 echo "java: $(java -version 2>&1 | awk -F '\\"' '/version/ { print $2 }')"
+
+#
+# system: maven-3
+#
+if ! (which mvn 1>/dev/null 2>&1) ; then
+  echo "Installing maven 3.3.3..."
+  curl http://mirrors.ukfast.co.uk/sites/ftp.apache.org/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz | tar xz -C /usr/local/
+  ln -s /usr/local/apache-maven-3.3.3/bin/mvn /usr/local/bin/mvn
+fi
+echo "maven: $(mvn -version) | head -n 1"
 
 #
 # system: grunt-cli
