@@ -325,6 +325,16 @@ echo "htop: $(htop --version 2>&1)" | head -n 1
 #
 # util: tree
 #
+if ! (which siege 1>/dev/null 2>&1) ; then
+  echo "Installing siege"
+
+  apt-get install siege -y
+fi
+echo "siege: $(siege --version 2>&1)" | head -n 1
+
+#
+# util: tree
+#
 if ! (which tree 1>/dev/null 2>&1) ; then
   echo "Installing tree..."
 
