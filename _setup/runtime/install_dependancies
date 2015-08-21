@@ -123,6 +123,13 @@ echo "bosh_cli: make sure we use the newly installed bosh_cli bin"
 sudo rm /usr/local/bin/bosh
 sudo ln -s /var/vcap/packages/ruby/lib/ruby/gems/2.1.0/gems/bosh_cli-*/bin/bosh /usr/local/bin/bosh
 
+#
+# util: bosh-gen
+if ! (gem list bosh-gem | grep bosh-gen 1>/dev/null 2>&1) ; then
+  echo "Installing bosh-gen"
+  gem install bosh-gen --no-ri --no-rdoc
+fi
+echo "bosh-gen: $(gem list bosh-gen)" | tail -n 1
 
 #
 # system: git
