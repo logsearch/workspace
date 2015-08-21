@@ -343,6 +343,16 @@ fi
 echo "tree: $(tree --version 2>&1)" | head -n 1
 
 #
+# util: httparty
+#
+if ! (which httparty 1>/dev/null 2>&1) ; then
+  echo "Installing httparty"
+
+  gem install httparty --no-ri --no-rdoc
+fi
+echo "httparty: $(httparty --version 2>&1)" | head -n 1
+
+#
 # util: tree
 #
 if ! (which rake 1>/dev/null 2>&1) ; then
