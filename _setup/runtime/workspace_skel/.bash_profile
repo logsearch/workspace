@@ -174,9 +174,6 @@ warn_if_env_missing GIT_AUTHOR_EMAIL "commit changes to Git"
 export GIT_COMMITTER_NAME="${GIT_COMMITTER_NAME:-"$GIT_AUTHOR_NAME"}"
 export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-"$GIT_AUTHOR_EMAIL"}"
 
-#Turn on the credential helper so that Git will save your credentials in memory 1 hour.
-git config --global credential.helper 'cache --timeout=3600'
-
 #Enable command completions
 complete -C '/usr/local/bin/aws_completer' aws
 
